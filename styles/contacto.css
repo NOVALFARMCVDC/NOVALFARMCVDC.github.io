@@ -340,7 +340,6 @@
 /* INPUTS */
 
 .form-group input,
-.form-group select,
 .form-group textarea {
 
     width: 100%;
@@ -378,7 +377,6 @@
 /* FOCUS */
 
 .form-group input:focus,
-.form-group select:focus,
 .form-group textarea:focus {
 
     border-color: var(--color-accent);
@@ -627,7 +625,6 @@ body.dark-mode .contact-info-item {
 }
 
 body.dark-mode .form-group input,
-body.dark-mode .form-group select,
 body.dark-mode .form-group textarea {
 
     background: #2a2a2a;

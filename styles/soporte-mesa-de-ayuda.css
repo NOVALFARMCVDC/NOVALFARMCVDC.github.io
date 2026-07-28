@@ -1,0 +1,800 @@
+/* =========================================================
+   SOPORTE-MESA-DE-AYUDA.CSS
+   PAGINA: SOPORTE Y MESA DE AYUDA
+   AUTOR:EDWIN ALEXANDER GALVIS PATIÑO - 1032386348
+========================================================= */
+
+/* =========================================================
+   BLOQUE UNO - HERO
+========================================================= */
+
+.support-hero {
+
+    position: relative;
+
+    min-height: 65vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 160px 8% 100px;
+
+    overflow: hidden;
+
+    background-image:
+        url("../assets/images/HeroSoporteA.webp");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+}
+
+/* OVERLAY */
+
+.support-hero-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(135deg,
+            rgba(2, 19, 43, 0.94),
+            rgba(15, 46, 92, 0.82));
+}
+
+/* CONTENIDO */
+
+.support-hero-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 1400px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+/* TEXTO */
+
+.support-hero-text {
+
+    max-width: 950px;
+
+    margin: auto;
+}
+
+/* TITULO */
+
+.support-hero-text h1 {
+
+    font-size: 74px;
+
+    line-height: 1.05;
+
+    color: white;
+
+    margin-bottom: 30px;
+
+    font-weight: 700;
+
+    letter-spacing: -2px;
+
+    animation: fadeUp 1s ease;
+}
+
+/* PÁRRAFO */
+
+.support-hero-text p {
+
+    font-size: 22px;
+
+    line-height: 1.9;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    max-width: 780px;
+
+    margin: auto;
+
+    animation: fadeUp 1.2s ease;
+}
+
+/* =========================================================
+   BLOQUE DOS - CANALES DE SOPORTE
+========================================================= */
+
+.support-channels {
+
+    padding: 120px 8%;
+
+    background: var(--color-white);
+}
+
+/* HEADER */
+
+.support-header {
+
+    text-align: center;
+
+    margin-bottom: 80px;
+}
+
+/* TITULO */
+
+.support-header h2 {
+
+    font-size: 56px;
+
+    color: var(--color-primary);
+
+    margin-bottom: 24px;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
+}
+
+/* TEXTO */
+
+.support-header p {
+
+    max-width: 850px;
+
+    margin: auto;
+
+    font-size: 20px;
+
+    line-height: 1.8;
+
+    color: var(--color-text);
+}
+
+/* GRID */
+
+.support-container {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 30px;
+}
+
+/* CARD */
+
+.support-card {
+
+    background: var(--color-white);
+
+    border-radius: 30px;
+
+    padding: 45px 30px;
+
+    border:
+        1px solid var(--color-border);
+
+    box-shadow: var(--shadow-sm);
+
+    text-align: center;
+
+    transition: var(--transition);
+
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+/* EFECTO SUPERIOR */
+
+.support-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 5px;
+
+    background:
+        linear-gradient(90deg,
+            var(--color-accent),
+            var(--color-secondary));
+
+    transform: scaleX(0);
+
+    transform-origin: left;
+
+    transition: var(--transition);
+}
+
+/* HOVER */
+
+.support-card:hover {
+
+    transform: translateY(-12px);
+
+    box-shadow: var(--shadow-md);
+}
+
+/* HOVER TOP */
+
+.support-card:hover::before {
+
+    transform: scaleX(1);
+}
+
+/* ICONO */
+
+.support-icon {
+
+    width: 95px;
+
+    height: 95px;
+
+    border-radius: 26px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 30px;
+
+    background:
+        linear-gradient(135deg,
+            rgba(0, 212, 255, 0.12),
+            rgba(34, 197, 94, 0.12));
+}
+
+/* ICONO */
+
+.support-icon i {
+
+    font-size: 42px;
+
+    color: var(--color-accent);
+}
+
+/* TITULO */
+
+.support-card h3 {
+
+    font-size: 26px;
+
+    color: var(--color-primary);
+
+    margin-bottom: 18px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+}
+
+/* TEXTO */
+
+.support-card p {
+
+    font-size: 17px;
+
+    line-height: 1.8;
+
+    color: var(--color-text);
+}
+
+/* =========================================================
+   BLOQUE TRES - INFORMACIÓN SOPORTE
+========================================================= */
+
+.support-info {
+
+    padding: 120px 8%;
+
+    background:
+        linear-gradient(180deg,
+            #f8fbff,
+            #ffffff);
+}
+
+/* CONTENEDOR */
+
+.support-info-container {
+
+    max-width: 1400px;
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 80px;
+}
+
+/* IMAGEN */
+
+.support-info-image {
+
+    flex: 1;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+/* IMG */
+
+.support-info-image img {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    border-radius: 32px;
+
+    object-fit: cover;
+
+    box-shadow: var(--shadow-lg);
+}
+
+/* TEXTO */
+
+.support-info-text {
+
+    flex: 1;
+}
+
+/* TAG */
+
+.section-tag {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 20px;
+
+    border-radius: 50px;
+
+    background:
+        rgba(0, 212, 255, 0.10);
+
+    color: var(--color-accent);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 24px;
+}
+
+/* TITULO */
+
+.support-info-text h2 {
+
+    font-size: 58px;
+
+    line-height: 1.15;
+
+    color: var(--color-primary);
+
+    margin-bottom: 28px;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
+}
+
+/* PÁRRAFO */
+
+.support-info-text p {
+
+    font-size: 20px;
+
+    line-height: 1.9;
+
+    color: var(--color-text);
+
+    margin-bottom: 40px;
+}
+
+/* LISTA */
+
+.support-benefits {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+/* ITEM */
+
+.support-benefit-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 22px 26px;
+
+    border-radius: 20px;
+
+    background: var(--color-white);
+
+    border:
+        1px solid var(--color-border);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+/* HOVER */
+
+.support-benefit-item:hover {
+
+    transform: translateX(8px);
+
+    box-shadow: var(--shadow-md);
+}
+
+/* ICONO */
+
+.support-benefit-item i {
+
+    font-size: 22px;
+
+    color: var(--color-accent);
+}
+
+/* TEXTO */
+
+.support-benefit-item span {
+
+    font-size: 18px;
+
+    color: var(--color-primary);
+
+    line-height: 1.7;
+
+    font-weight: 500;
+}
+
+/* =========================================================
+   BLOQUE CUATRO - CTA
+========================================================= */
+
+.support-cta {
+
+    position: relative;
+
+    margin: 120px 8%;
+
+    min-height: 420px;
+
+    border-radius: 40px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    background-image:
+        url("../assets/images/HeroSoporteB.webp");
+
+    background-size: cover;
+
+    background-position: center;
+
+    box-shadow: var(--shadow-lg);
+}
+
+/* OVERLAY */
+
+.support-cta-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(135deg,
+            rgba(2, 19, 43, 0.94),
+            rgba(2, 19, 43, 0.72));
+}
+
+/* CONTENIDO */
+
+.support-cta-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 900px;
+
+    padding: 60px 40px;
+}
+
+/* TITULO */
+
+.support-cta-content h2 {
+
+    font-size: 60px;
+
+    line-height: 1.1;
+
+    color: white;
+
+    margin-bottom: 24px;
+
+    font-weight: 700;
+
+    letter-spacing: -1px;
+}
+
+/* TEXTO */
+
+.support-cta-content p {
+
+    font-size: 22px;
+
+    line-height: 1.8;
+
+    color: rgba(255, 255, 255, 0.84);
+
+    margin-bottom: 40px;
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode .support-channels {
+
+    background: var(--color-white);
+}
+
+body.dark-mode .support-info {
+
+    background:
+        linear-gradient(180deg,
+            #151515,
+            #1b1b1b);
+}
+
+body.dark-mode .support-card,
+body.dark-mode .support-benefit-item {
+
+    background: #1f1f1f;
+}
+
+/* =========================================================
+   RESPONSIVE LARGE LAPTOP
+========================================================= */
+
+@media(max-width: 1400px) {
+
+    .support-container {
+
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE LAPTOP
+========================================================= */
+
+@media(max-width: 1200px) {
+
+    .support-hero-text h1 {
+
+        font-size: 62px;
+    }
+
+    .support-header h2,
+    .support-info-text h2 {
+
+        font-size: 48px;
+    }
+
+    .support-cta-content h2 {
+
+        font-size: 50px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE TABLET
+========================================================= */
+
+@media(max-width: 992px) {
+
+    .support-info-container {
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .support-benefits {
+
+        align-items: center;
+    }
+
+    .support-benefit-item {
+
+        width: 100%;
+
+        max-width: 700px;
+    }
+
+    .support-container {
+
+        grid-template-columns: 1fr;
+    }
+
+    .support-cta-content h2 {
+
+        font-size: 44px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+
+@media(max-width: 768px) {
+
+    .support-hero,
+    .support-channels,
+    .support-info {
+
+        padding: 100px 6%;
+    }
+
+    .support-hero {
+
+        min-height: 60vh;
+
+        padding-top: 150px;
+    }
+
+    .support-hero-text h1 {
+
+        font-size: 44px;
+
+        line-height: 1.15;
+    }
+
+    .support-hero-text p {
+
+        font-size: 18px;
+    }
+
+    .support-header h2,
+    .support-info-text h2 {
+
+        font-size: 38px;
+    }
+
+    .support-header p,
+    .support-info-text p {
+
+        font-size: 17px;
+    }
+
+    .support-card {
+
+        padding: 40px 28px;
+    }
+
+    .support-card h3 {
+
+        font-size: 24px;
+    }
+
+    .support-benefit-item {
+
+        align-items: flex-start;
+
+        text-align: left;
+    }
+
+    .support-cta {
+
+        margin: 100px 6%;
+
+        border-radius: 30px;
+    }
+
+    .support-cta-content {
+
+        padding: 50px 25px;
+    }
+
+    .support-cta-content h2 {
+
+        font-size: 36px;
+    }
+
+    .support-cta-content p {
+
+        font-size: 18px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE SMALL MOBILE
+========================================================= */
+
+@media(max-width: 480px) {
+
+    .support-hero-text h1 {
+
+        font-size: 36px;
+    }
+
+    .support-header h2,
+    .support-info-text h2 {
+
+        font-size: 32px;
+    }
+
+    .support-card h3 {
+
+        font-size: 22px;
+    }
+
+    .support-benefit-item span {
+
+        font-size: 16px;
+    }
+
+    .support-cta-content h2 {
+
+        font-size: 30px;
+    }
+
+    .support-cta-content p {
+
+        font-size: 16px;
+    }
+}
