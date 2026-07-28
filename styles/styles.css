@@ -42,6 +42,10 @@
     /* TRANSICIONES */
 
     --transition: 0.4s ease;
+
+    /* ALTURA HEADER */
+
+    --header-height: 84px;
 }
 
 /* =========================================================
@@ -80,6 +84,12 @@ html {
 /* =========================================================
    NAV LINK ACTIVE
 ========================================================= */
+
+main {
+
+    padding-top: var(--header-height);
+
+}
 
 .main-nav a.active {
 
@@ -280,6 +290,8 @@ body.dark-mode .main-header {
 
 .navbar {
 
+    --header-height: 84px;
+
     display: flex;
 
     align-items: center;
@@ -373,28 +385,49 @@ body.dark-mode .main-header {
 ========================================================= */
 
 footer {
+    position: relative;
 
-    background:
-        linear-gradient(135deg,
-            #02132b,
-            #0f2e5c);
+    padding: 90px 8% 30px;
 
-    color: white;
+    color: #ffffff;
 
-    padding: 80px 8% 30px;
+    background-image:
+        url("../assets/images/Footer.webp");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    overflow: hidden;
 }
 
 /* CONTAINER */
 
 .footer-container {
+    position: relative;
+    z-index: 2;
 
-    display: flex;
+    max-width: 1400px;
 
-    justify-content: space-between;
+    margin: auto;
 
-    gap: 50px;
+    padding-right: 25%;
+}
 
-    margin-bottom: 50px;
+.footer-container,
+.footer-bottom {
+
+    position: relative;
+    z-index: 2;
+
+}
+
+.footer-container h3,
+.footer-container p,
+.footer-container a,
+.footer-bottom {
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 /* TEXTOS */
@@ -486,6 +519,12 @@ footer {
 
 @media(max-width: 992px) {
 
+    :root {
+
+        --header-height: 96px;
+
+    }
+
     .navbar {
 
         padding: 18px 6%;
@@ -495,13 +534,13 @@ footer {
 
         position: fixed;
 
-        top: 90px;
+        top: var(--header-height);
 
         right: -100%;
 
         width: 280px;
 
-        height: calc(100vh - 90px);
+        height: calc(100vh - var(--header-height));
 
         background: var(--color-white);
 
@@ -532,6 +571,10 @@ footer {
         display: block;
     }
 
+    footer {
+    background-position: 65% center;
+}
+
     .footer-container {
 
         flex-direction: column;
@@ -543,6 +586,27 @@ footer {
 ========================================================= */
 
 @media(max-width: 768px) {
+
+    footer {
+        padding: 70px 6% 30px;
+
+        background-size: cover;
+
+        /*
+         * Damos prioridad al gato.
+         */
+        background-position: 72% center;
+    }
+
+    .footer-container {
+        padding-right: 0;
+    }
+
+    :root {
+
+        --header-height: 96px;
+
+    }
 
     .logo-area img {
 
@@ -565,6 +629,20 @@ footer {
 ========================================================= */
 
 @media(max-width: 480px) {
+
+        footer {
+
+        padding: 60px 6% 25px;
+
+        background-position: 75% center;
+
+    }
+
+    :root {
+
+        --header-height: 92px;
+
+    }
 
     .navbar {
 
