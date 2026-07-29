@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Prueba API CVDC 2026
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Prueba CVDC2026_API
+    </h1>
+
+    <button
+        type="button"
+        id="btnPrueba">
+
+        Probar API
+
+    </button>
+
+    <pre id="resultado">
+Esperando prueba...
+    </pre>
+
+
+    <script>
+
+        const API_URL =
+            "https://script.google.com/macros/s/AKfycbxRuQV1aav8s9ig97BJ19wq6UjPwdxo8vDF_ia9xKw6NBRSaQOhjDwqVjq68GUjZOeD/exec";
+
+
+        const btnPrueba =
+            document.getElementById(
+                "btnPrueba"
+            );
+
+
+        const resultado =
+            document.getElementById(
+                "resultado"
+            );
+
+
+        btnPrueba.addEventListener(
+            "click",
+            async () => {
+
+                resultado.textContent =
+                    "Consultando...";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            API_URL +
+                            "?action=participante&id=CVDC2026-0010"
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "HTTP " +
+                            response.status
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    resultado.textContent =
+                        JSON.stringify(
+                            data,
+                            null,
+                            2
+                        );
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+
+                    resultado.textContent =
+                        "ERROR:\n" +
+                        error.message;
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
