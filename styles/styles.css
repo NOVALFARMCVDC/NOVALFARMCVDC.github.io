@@ -1,10 +1,4 @@
 /* =========================================================
-   STYLES.CSS
-   PAGINA: TODAS
-   AUTOR: EDWIN ALEXANDER GALVIS PATIÑO - 1032386348
-========================================================= */
-
-/* =========================================================
    VARIABLES GLOBALES
 ========================================================= */
 
@@ -12,15 +6,21 @@
 
     /* COLORES */
 
-    --color-primary: #02132b;
-    --color-secondary: #22c55e;
-    --color-accent: #00d4ff;
+    --color-primary: #312783;
+    --color-secondary: #5F5692;
+    --color-accent: #F1C5DC;
 
-    --color-white: #ffffff;
-    --color-light: #f8fbff;
+    --color-white: #FFFFFF;
+    --color-light: #F8F7FC;
 
-    --color-text: #5f6b7a;
-    --color-border: rgba(0, 0, 0, 0.08);
+    --color-text: #5F5D6B;
+    --color-border: rgba(49, 39, 131, 0.10);
+
+    /* COLORES DE ESTADO */
+
+    --color-success: #22C55E;
+
+    --color-error: #EF4444;
 
     /* SOMBRAS */
 
@@ -93,7 +93,7 @@ main {
 
 .main-nav a.active {
 
-    color: var(--color-accent);
+    color: var(--color-secondary);
 
     font-weight: 600;
 }
@@ -111,7 +111,9 @@ main {
 
 body {
 
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+
+    font-weight: 400;
 
     background: var(--color-white);
 
@@ -122,6 +124,36 @@ body {
     transition:
         background-color 0.3s ease,
         color 0.3s ease;
+}
+
+/* =========================================================
+   TIPOGRAFÍA GLOBAL
+========================================================= */
+
+/* TÍTULOS */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+/* TEXTO GENERAL */
+
+p,
+li,
+span,
+label,
+input,
+select,
+textarea,
+button,
+a {
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* =========================================================
@@ -193,7 +225,7 @@ ul {
     color: white;
 
     box-shadow:
-        0px 12px 30px rgba(34, 197, 94, 0.20);
+        0px 12px 30px rgba(95, 86, 146, 0.25);
 }
 
 /* HOVER */
@@ -202,7 +234,7 @@ ul {
 
     transform: translateY(-4px);
 
-    background: #1fb157;
+    background: #51487F;
 }
 
 /* BOTÓN SECONDARY */
@@ -362,7 +394,7 @@ body.dark-mode .main-header {
 
 .main-nav a:hover {
 
-    color: var(--color-accent);
+    color: var(--color-secondary);
 }
 
 /* =========================================================

@@ -1,9 +1,4 @@
 /* =========================================================
-   CONTACTO.CSS
-   PAGINA: CONTACTO
-========================================================= */
-
-/* =========================================================
    BLOQUE UNO - HERO
 ========================================================= */
 
@@ -165,7 +160,7 @@
     border-radius: 50px;
 
     background:
-        rgba(0, 212, 255, 0.10);
+        rgba(241, 197, 220, 0.35);
 
     color: var(--color-accent);
 
@@ -258,7 +253,7 @@
 .contact-info-item i {
     font-size: 24px;
 
-    color: var(--color-accent);
+    color: var(--color-secondary);
 
     margin-top: 4px;
 }
@@ -416,7 +411,7 @@
     border-color: var(--color-accent);
 
     box-shadow:
-        0 0 0 4px rgba(0, 212, 255, 0.12);
+        0 0 0 4px rgba(95, 86, 146, 0.15);
 }
 
 /* BOTÓN */
@@ -466,8 +461,8 @@
 
     background:
         linear-gradient(180deg,
-            #f8fbff,
-            #ffffff);
+            #F8F7FC,
+            #FFFFFF);
 }
 
 /* HEADER */
@@ -575,8 +570,8 @@
 
     background:
         linear-gradient(135deg,
-            rgba(2, 19, 43, 0.75),
-            rgba(2, 19, 43, 0.55));
+            rgba(49, 39, 131, 0.82),
+            rgba(95, 86, 146, 0.62));
 
     z-index: 1;
 }
