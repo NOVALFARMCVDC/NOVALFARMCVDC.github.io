@@ -1,7 +1,7 @@
 /* =========================================================
-   SCRIPTS.JS
-   PAGINA: TODAS
-   AUTOR: EDWIN ALEXANDER GALVIS PATIÑO - 1032386348
+   CONTACTO.JS
+   PROYECTO: REGISTRO CVDC 2026
+   EMPRESA: NOVALFARM SAS
 ========================================================= */
 
 /* =========================================================
@@ -12,30 +12,52 @@ const menuToggle = document.getElementById("menu-toggle");
 
 const mainNav = document.getElementById("main-nav");
 
-/* VALIDAR EXISTENCIA */
-
 if (menuToggle && mainNav) {
 
-    /* ABRIR MENU */
+    /* ABRIR / CERRAR MENU */
 
     menuToggle.addEventListener("click", () => {
 
-        mainNav.classList.toggle("active");
+        const isOpen =
+            mainNav.classList.toggle("active");
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isOpen
+                ? "Cerrar menú"
+                : "Abrir menú"
+        );
     });
 
     /* CERRAR MENU AL HACER CLICK */
 
-    const navLinks = mainNav.querySelectorAll("a");
+    const navLinks =
+        mainNav.querySelectorAll("a");
 
-    navLinks.forEach(link => {
+    navLinks.forEach((link) => {
 
         link.addEventListener("click", () => {
 
             mainNav.classList.remove("active");
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuToggle.setAttribute(
+                "aria-label",
+                "Abrir menú"
+            );
         });
     });
 
-    /* CLICK FUERA */
+    /* CERRAR MENU AL HACER CLICK FUERA */
 
     document.addEventListener("click", (event) => {
 
@@ -51,50 +73,47 @@ if (menuToggle && mainNav) {
         ) {
 
             mainNav.classList.remove("active");
-        }
-    });
-}
 
-/* =========================================================
-   DARK MODE
-========================================================= */
-
-const darkToggle =
-    document.getElementById("toggle-dark");
-
-/* CARGAR ESTADO */
-
-if (localStorage.getItem("dark-mode") === "enabled") {
-
-    document.body.classList.add("dark-mode");
-}
-
-/* TOGGLE */
-
-if (darkToggle) {
-
-    darkToggle.addEventListener("click", () => {
-
-        document.body.classList.toggle("dark-mode");
-
-        /* GUARDAR */
-
-        if (
-            document.body.classList.contains("dark-mode")
-        ) {
-
-            localStorage.setItem(
-                "dark-mode",
-                "enabled"
+            menuToggle.setAttribute(
+                "aria-expanded",
+                "false"
             );
 
-        } else {
-
-            localStorage.removeItem(
-                "dark-mode"
+            menuToggle.setAttribute(
+                "aria-label",
+                "Abrir menú"
             );
         }
     });
+
+    /* CERRAR MENU CON ESC */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Escape" &&
+                mainNav.classList.contains("active")
+            ) {
+
+                mainNav.classList.remove("active");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                menuToggle.setAttribute(
+                    "aria-label",
+                    "Abrir menú"
+                );
+
+                menuToggle.focus();
+            }
+        }
+    );
+
 }
 
 /* =========================================================
@@ -104,14 +123,17 @@ if (darkToggle) {
 const header =
     document.querySelector(".main-header");
 
-window.addEventListener("scroll", () => {
+if (header) {
 
-    if (window.scrollY > 50) {
+    window.addEventListener("scroll", () => {
 
-        header.classList.add("scrolled");
+        if (window.scrollY > 50) {
 
-    } else {
+            header.classList.add("scrolled");
 
-        header.classList.remove("scrolled");
-    }
-});
+        } else {
+
+            header.classList.remove("scrolled");
+        }
+    });
+}

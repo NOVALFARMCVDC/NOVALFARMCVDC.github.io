@@ -1,11 +1,7 @@
 /* =========================================================
    CONTACTO.JS
-   PAGINA: CONTACTO
-   AUTOR: EDWIN ALEXANDER GALVIS PATIÑO - 1032386348
-========================================================= */
-
-/* =========================================================
-   ELEMENTOS
+   PROYECTO: REGISTRO CVDC 2026
+   EMPRESA: NOVALFARM SAS
 ========================================================= */
 
 const form =
@@ -13,6 +9,15 @@ const form =
 
 const message =
     document.getElementById("formMessage");
+
+const quienesSelect =
+    document.getElementById("quienes");
+
+const grupoQuienesOtro =
+    document.getElementById("grupoQuienesOtro");
+
+const quienesOtroInput =
+    document.getElementById("quienesb");
 
 /* =========================================================
    VALIDAR EXISTENCIA
@@ -43,40 +48,6 @@ if (form) {
 
             const originalButtonText =
                 submitButton.innerHTML;
-
-            /* =============================================
-               OBTENER DATOS
-            ============================================== */
-
-            const nombre =
-                document.getElementById("nombre").value.trim();
-
-            const telefono =
-                document.getElementById("telefono").value.trim();
-
-            const correo =
-                document.getElementById("correo").value.trim();
-
-            const ciudad =
-                document.getElementById("ciudad").value.trim();
-
-            const direccion =
-                document.getElementById("direccion").value.trim();
-
-            const rangoedad =
-                document.getElementById("rangoedad").value.trim();
-
-            const genero =
-                document.getElementById("genero").value.trim();
-
-            const quienes =
-                document.getElementById("quienes").value.trim();
-
-            const quienesb =
-                document.getElementById("quienesb").value.trim();
-
-            const empresa =
-                document.getElementById("empresa").value.trim();
 
             /* =============================================
                VALIDAR CAMPOS
@@ -138,63 +109,6 @@ if (form) {
 
             const formData =
                 new FormData(form);
-
-            /* const formData =
-                new FormData(); */
-
-            /* =============================================
-               APPEND DATOS
-            ============================================== */
-
-            /* formData.append(
-                "entry.445168501",
-                nombre
-            ); */
-
-            /* formData.append(
-                "entry.1190734210",
-                telefono
-            ); */
-
-            /* formData.append(
-                "entry.1235014945",
-                correo
-            ); */
-
-            /* formData.append(
-                "entry.204726276",
-                ciudad
-            ); */
-
-            /* formData.append(
-                "entry.1206980979",
-                direccion
-            ); */
-
-            /* formData.append(
-                "entry.147446224",
-                rangoedad
-            ); */
-
-            /* formData.append(
-                "entry.490328538",
-                genero
-            );
-
-            /* formData.append(
-                "entry.2110988957",
-                quienes
-            ); */
-
-            /* formData.append(
-                "entry.1274518297",
-                quienesb
-            ); */
-
-           /* formData.append(
-                "entry.99293918",
-                empresa
-            ); */
 
             /* =============================================
                ENVÍO
@@ -263,6 +177,36 @@ if (form) {
     );
 
     /* =====================================================
+       OCULTAMIENTO CAMPO "OTRO" EN QUIÉNES
+    ====================================================== */
+
+    if (quienesSelect && grupoQuienesOtro && quienesOtroInput) {
+
+        const actualizarCampoOtro = () => {
+
+            const mostrar =
+                quienesSelect.value === "Otro";
+
+            grupoQuienesOtro.hidden = !mostrar;
+
+            quienesOtroInput.required = mostrar;
+
+            if (!mostrar) {
+                quienesOtroInput.value = "";
+                quienesOtroInput.style.borderColor = "";
+                quienesOtroInput.style.boxShadow = "";
+            }
+        };
+
+        quienesSelect.addEventListener(
+            "change",
+            actualizarCampoOtro
+        );
+
+        actualizarCampoOtro();
+    }
+
+    /* =====================================================
        VALIDACIONES EN TIEMPO REAL
     ====================================================== */
 
@@ -297,7 +241,10 @@ if (form) {
            SELECT
         ============================================== */
 
-        if (field.tagName === "SELECT") {
+        if (
+            field.tagName === "SELECT" ||
+            field.type === "checkbox"
+        ) {
 
             field.addEventListener(
                 "change",
@@ -322,6 +269,42 @@ if (form) {
         field.style.borderColor = "";
 
         field.style.boxShadow = "";
+
+        /* =============================================
+            VALIDAR CHECKBOX
+         ============================================== */
+
+        if (field.type === "checkbox") {
+
+            const privacyBox =
+                field.closest(".privacy-consent");
+
+            if (
+                field.required &&
+                !field.checked
+            ) {
+
+                if (privacyBox) {
+
+                    privacyBox.style.borderColor =
+                        "#ef4444";
+
+                    privacyBox.style.background =
+                        "rgba(239,68,68,0.06)";
+                }
+
+                return false;
+            }
+
+            if (privacyBox) {
+
+                privacyBox.style.borderColor = "";
+
+                privacyBox.style.background = "";
+            }
+
+            return true;
+        }
 
         /* =============================================
            CAMPOS OPCIONALES
