@@ -162,7 +162,7 @@
     background:
         rgba(241, 197, 220, 0.35);
 
-    color: var(--color-accent);
+    color: var(--color-secondary);
 
     font-size: 14px;
 
@@ -408,7 +408,7 @@
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--color-accent);
+    border-color: var(--color-secondary);
 
     box-shadow:
         0 0 0 4px rgba(95, 86, 146, 0.15);
