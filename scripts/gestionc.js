@@ -1276,7 +1276,7 @@ function construirFormData(
 
 
 /* =========================================================
-   26. ENVIAR GESTIÓN A GOOGLE FORMS
+   25. ENVIAR GESTIÓN A GOOGLE FORMS
 ========================================================= */
 
 async function enviarGestionComercial(
@@ -1303,27 +1303,66 @@ async function enviarGestionComercial(
 
 
 /* =========================================================
-   27. ESTADO DE ENVÍO
+   26. ESTADO DE ENVÍO
 ========================================================= */
 
 function establecerEstadoEnvio(
-    enviando
+    estado
 ) {
 
-    commercialSubmit.disabled =
-        enviando;
+    switch (estado) {
+
+        case "enviando":
+
+            commercialSubmit.hidden =
+                false;
+
+            commercialSubmit.disabled =
+                true;
+
+            commercialSubmit.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Registrando...';
+
+            break;
 
 
-    commercialSubmit.innerHTML =
-        enviando
-            ? '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Registrando...'
-            : '<i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Registrar gestión comercial';
+        case "exito":
+
+            commercialSubmit.disabled =
+                true;
+
+            commercialSubmit.hidden =
+                true;
+
+            newCommercialManagement.hidden =
+                false;
+
+            break;
+
+
+        default:
+
+            commercialSubmit.hidden =
+                false;
+
+            commercialSubmit.disabled =
+                false;
+
+            commercialSubmit.innerHTML =
+                '<i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Registrar gestión comercial';
+
+            newCommercialManagement.hidden =
+                true;
+
+            break;
+
+    }
 
 }
 
 
 /* =========================================================
-   28. FINALIZAR GESTIÓN
+   27. FINALIZAR GESTIÓN
 ========================================================= */
 
 function finalizarGestion() {
@@ -1342,20 +1381,19 @@ function finalizarGestion() {
         );
 
 
-    commercialSubmit.disabled =
-        true;
-
     continueCommercial.disabled =
         true;
 
-    newCommercialManagement.hidden =
-        false;
+
+    establecerEstadoEnvio(
+        "exito"
+    );
 
 }
 
 
 /* =========================================================
-   29. NUEVA GESTIÓN
+   28. NUEVA GESTIÓN
 ========================================================= */
 
 function iniciarNuevaGestion() {
@@ -1381,14 +1419,12 @@ function iniciarNuevaGestion() {
     restablecerCamposCondicionales();
 
 
-    commercialSubmit.disabled =
-        false;
+    establecerEstadoEnvio(
+        "normal"
+    );
 
     continueCommercial.disabled =
         false;
-
-    newCommercialManagement.hidden =
-        true;
 
 
     limpiarMensaje();
@@ -1419,7 +1455,7 @@ function iniciarNuevaGestion() {
 
 
 /* =========================================================
-   30. EVENTO - BUSCAR PARTICIPANTE
+   29. EVENTO - BUSCAR PARTICIPANTE
 ========================================================= */
 
 function registrarEventos() {
@@ -1490,15 +1526,12 @@ function registrarEventos() {
             searchResults.hidden =
                 true;
 
-
             continueCommercial.disabled =
                 false;
 
-            commercialSubmit.disabled =
-                false;
-
-            newCommercialManagement.hidden =
-                true;
+            establecerEstadoEnvio(
+                "normal"
+            );
 
 
             limpiarMensaje();
@@ -1614,7 +1647,7 @@ function registrarEventos() {
                 );
 
             establecerEstadoEnvio(
-                true
+                "enviado"
             );
 
 
@@ -1655,23 +1688,12 @@ function registrarEventos() {
 
             } finally {
 
-                /*
-                 * Si finalizarGestion() bloqueó correctamente
-                 * el formulario, el botón debe permanecer
-                 * deshabilitado para evitar registros dobles.
-                 */
-
                 if (
                     !newCommercialManagement.hidden
                 ) {
 
-                    commercialSubmit.disabled =
-                        true;
-
-                } else {
-
                     establecerEstadoEnvio(
-                        false
+                        "normal"
                     );
 
                 }
@@ -1728,6 +1750,9 @@ function inicializarGestionComercial() {
     newCommercialManagement.hidden =
         true;
 
+    establecerEstadoEnvio(
+        "normal"
+    );
 
     registrarEventos();
 
