@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión Comercial | Novalfarm SAS | CVDC 2026</title>
+    <meta name="description"
+        content="Módulo de Gestión Comercial de Novalfarm SAS para el registro y seguimiento de participantes del CVDC 2026." />
+    <meta name="author" content="Novalfarm SAS" />
+    <meta property="og:title" content="Gestión Comercial | Novalfarm SAS | CVDC 2026" />
+    <meta property="og:description"
+        content="Módulo de gestión y seguimiento comercial de participantes del CVDC 2026." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="../assets/images/PreviewNovalfarm.webp" />
+    <link rel="icon" href="../assets/icons/FaviconNovalfarm.ico" type="image/ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="stylesheet" href="../styles/gestioncomercial.css" />
+</head>
+
+<body>
+    <!--  INICIO HEADER -->
+    <header class="main-header">
+        <div class="navbar">
+            <a href="../pages/gestioncomercial.html" class="logo-area" aria-label="Ir a la página gestión comercial">
+                <img src="../assets/icons/LogoNegativoNovalfarmB.svg" alt="Logo Novalfarm SAS" />
+                <div class="logo-text">
+                    <h2>
+                        Novalfarm SAS<br />
+                        CVDC 2026
+                    </h2>
+                </div>
+            </a>
+            <!-- NAVEGACIÓN -->
+            <nav class="main-nav" id="main-nav">
+                <a href="../pages/gestioncomercial.html"> GESTION COMERCIAL CVDC 2026 - NOVALFARM SAS </a>
+                <!--<a href="../pages/servicios.html"> Servicios </a> -->
+            </nav>
+            <!-- ACCIONES -->
+            <div class="header-actions">
+                <!-- BOTÓN MENU MOBILE -->
+                <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"
+                    aria-controls="main-nav" aria-expanded="false">
+
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- FIN HEADER -->
+    <!-- INICIO MAIN -->
+    <main class="gestion-main">
+        <!-- INTRODUCCIÓN -->
+        <section class="gestion-intro">
+            <span class="gestion-badge">
+                Novalfarm SAS · CVDC 2026
+            </span>
+            <h1>
+                Gestión Comercial
+            </h1>
+            <p>
+                Consulte el participante registrado y complete
+                la información correspondiente a la gestión
+                comercial realizada durante el evento.
+            </p>
+        </section>
+        <!-- PASO 1 - BUSCAR PARTICIPANTE -->
+        <section class="gestion-card" aria-labelledby="tituloBusqueda">
+            <div class="section-heading">
+                <span class="step-number">
+                    01
+                </span>
+                <div>
+                    <h2 id="tituloBusqueda">
+                        Buscar participante
+                    </h2>
+                    <p>
+                        Busque por nombre, correo electrónico
+                        o número de contacto.
+                    </p>
+                </div>
+            </div>
+            <form class="search-form" id="searchForm" novalidate>
+                <label for="searchInput" class="search-label">
+                    Participante
+                </label>
+                <div class="search-control">
+                    <input type="search" id="searchInput" placeholder="Nombre, correo o teléfono" autocomplete="off"
+                        minlength="3" required>
+                    <button type="submit" class="btn btn-primary" id="searchButton">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true">
+                        </i>
+                        Buscar
+                    </button>
+                </div>
+                <p class="search-help">
+                    Ingrese mínimo 3 caracteres para realizar
+                    la búsqueda.
+                </p>
+                <div id="searchMessage" class="gestion-message" role="status" aria-live="polite">
+                </div>
+            </form>
+            <!-- RESULTADOS -->
+            <div class="search-results" id="searchResults" hidden>
+                <h3>
+                    Resultados encontrados
+                </h3>
+                <div id="resultsList">
+                </div>
+            </div>
+        </section>
+        <!-- PASO 2 - PARTICIPANTE -->
+        <section class="gestion-card participant-section" id="participantSection" aria-labelledby="tituloParticipante"
+            hidden>
+            <div class="section-heading">
+                <span class="step-number">
+                    02
+                </span>
+                <div>
+                    <h2 id="tituloParticipante">
+                        Datos del participante
+                    </h2>
+                    <p>
+                        Información registrada previamente
+                        por el participante.
+                    </p>
+                </div>
+            </div>
+            <div class="participant-status">
+                <i class="fa-solid fa-circle-check" aria-hidden="true">
+                </i>
+                Participante encontrado
+            </div>
+            <div class="participant-grid">
+                <div class="form-group">
+                    <label for="participantId">
+                        ID Único Participante
+                    </label>
+                    <input type="text" id="participantId" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="participantName">
+                        Nombre completo
+                    </label>
+                    <input type="text" id="participantName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="participantPhone">
+                        Número de contacto
+                    </label>
+                    <input type="text" id="participantPhone" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="participantEmail">
+                        Correo electrónico
+                    </label>
+                    <input type="text" id="participantEmail" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="participantCity">
+                        Ciudad de origen
+                    </label>
+                    <input type="text" id="participantCity" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="participantAddress">
+                        Dirección
+                    </label>
+
+                    <input type="text" id="participantAddress" readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="participantAge">
+                        Rango de edad
+                    </label>
+
+                    <input type="text" id="participantAge" readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="participantGender">
+                        Género
+                    </label>
+
+                    <input type="text" id="participantGender" readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="participantType">
+                        ¿Quién es?
+                    </label>
+
+                    <input type="text" id="participantType" readonly>
+
+                </div>
+
+
+                <div class="form-group" id="participantOtherGroup" hidden>
+
+                    <label for="participantOther">
+                        Profesión / ocupación
+                    </label>
+
+                    <input type="text" id="participantOther" readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="participantCompany">
+                        Empresa / Clínica / Universidad
+                    </label>
+
+                    <input type="text" id="participantCompany" readonly>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="participantAuthorization">
+                        Tratamiento de datos
+                    </label>
+
+                    <input type="text" id="participantAuthorization" readonly>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="participant-actions">
+
+                <button type="button" class="btn btn-secondary" id="changeParticipant">
+
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true">
+                    </i>
+
+                    Buscar otro participante
+
+                </button>
+
+
+                <button type="button" class="btn btn-primary" id="continueCommercial">
+
+                    Continuar gestión
+
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true">
+                    </i>
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+        <!-- =====================================================
+     FORMULARIO DE GESTIÓN COMERCIAL
+====================================================== -->
+
+        <form id="commercialForm" class="commercial-form" novalidate hidden>
+
+
+            <!-- =================================================
+         PASO 03 - PERFIL COMERCIAL
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloPerfilComercial">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        03
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloPerfilComercial">
+                            Perfil comercial
+                        </h2>
+
+                        <p>
+                            Identifique el perfil y la relación
+                            comercial actual del participante.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+                    <div class="form-group">
+
+                        <label for="purchasePower">
+                            ¿Tiene poder de compra?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="purchasePower" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                            <option value="Participa en la decisión">Participa en la decisión</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="currentCustomer">
+                            ¿Actualmente compra nuestros productos veterinarios?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="currentCustomer" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+         PASO 04 - COMPORTAMIENTO DE COMPRA
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloCompra">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        04
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloCompra">
+                            Comportamiento de compra
+                        </h2>
+
+                        <p>
+                            Identifique dónde realiza normalmente
+                            sus compras.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+                    <div class="form-group">
+
+                        <label for="purchaseLocation">
+                            ¿Dónde compra normalmente?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="purchaseLocation" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="A&D AGRODISITRIBUCIONES">
+                                A&amp;D AGRODISITRIBUCIONES
+                            </option>
+
+                            <option value="AGRALBA">
+                                AGRALBA
+                            </option>
+
+                            <option value="CASAGRO">
+                                CASAGRO
+                            </option>
+
+                            <option value="CENTRAL PECUARIA">
+                                CENTRAL PECUARIA
+                            </option>
+
+                            <option value="DIANAGRO">
+                                DIANAGRO
+                            </option>
+
+                            <option value="DISTOY PETS">
+                                DISTOY PETS
+                            </option>
+
+                            <option value="DISTRIBUCIONES VETERINARIAS DISTRIVET">
+                                DISTRIBUCIONES VETERINARIAS DISTRIVET
+                            </option>
+
+                            <option value="ENERVIDA">
+                                ENERVIDA
+                            </option>
+
+                            <option value="JOTAGRO">
+                                JOTAGRO
+                            </option>
+
+                            <option value="PET SUPLET">
+                                PET SUPLET
+                            </option>
+
+                            <option value="RED AGROVETERINARIA">
+                                RED AGROVETERINARIA
+                            </option>
+
+                            <option value="SILVERAGRO">
+                                SILVERAGRO
+                            </option>
+
+                            <option value="VETIAGRO">
+                                VETIAGRO
+                            </option>
+
+                            <option value="OTRA">
+                                OTRA
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group" id="purchaseLocationOtherGroup" hidden>
+
+                        <label for="purchaseLocationOther">
+                            Si seleccionó otra, indique cuál
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input type="text" id="purchaseLocationOther" autocomplete="off">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+         PASO 05 - INTERÉS COMERCIAL
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloInteres">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        05
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloInteres">
+                            Interés comercial
+                        </h2>
+
+                        <p>
+                            Registre los productos y líneas de
+                            interés identificados durante la conversación.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+                    <div class="form-group">
+
+                        <label for="interestLine">
+                            ¿Qué línea le interesó?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="interestLine" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Dermatología">
+                                Dermatología
+                            </option>
+
+                            <option value="Antibióticos">
+                                Antibióticos
+                            </option>
+
+                            <option value="Osteo Articular">
+                                Osteo Articular
+                            </option>
+
+                            <option value="Nutraceúticos">
+                                Nutraceúticos
+                            </option>
+
+                            <option value="Salud Gastrointestinal">
+                                Salud Gastrointestinal
+                            </option>
+
+                            <option value="Salud Oral">
+                                Salud Oral
+                            </option>
+
+                            <option value="Respiratorio">
+                                Respiratorio
+                            </option>
+
+                            <option value="Cosmética">
+                                Cosmética
+                            </option>
+
+                            <option value="Otra">
+                                Otra
+                            </option>
+
+                            <option value="Todas">
+                                Todas
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group" id="interestLineOtherGroup" hidden>
+
+                        <label for="interestLineOther">
+                            Si seleccionó otra, indique cuál
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input type="text" id="interestLineOther" autocomplete="off">
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="specificProducts">
+                            Productos específicos de interés
+                        </label>
+
+                        <textarea id="specificProducts" rows="4" maxlength="1000"
+                            placeholder="Registre los productos mencionados por el participante.">
+                </textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="receiveInformation">
+                            ¿Desea recibir información?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="receiveInformation" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="commercialVisit">
+                            ¿Solicita visita comercial?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="commercialVisit" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+         PASO 06 - CALIFICACIÓN COMERCIAL
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloCalificacion">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        06
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloCalificacion">
+                            Calificación comercial
+                        </h2>
+
+                        <p>
+                            Determine el nivel de oportunidad
+                            comercial identificado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+                    <div class="form-group">
+
+                        <label for="interestLevel">
+                            Nivel de interés
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="interestLevel" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Alto">
+                                Alto
+                            </option>
+
+                            <option value="Medio">
+                                Medio
+                            </option>
+
+                            <option value="Bajo">
+                                Bajo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="purchasePotential">
+                            Potencial de compra
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="purchasePotential" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Muy Alto">
+                                Muy Alto
+                            </option>
+
+                            <option value="Alto">
+                                Alto
+                            </option>
+
+                            <option value="Medio">
+                                Medio
+                            </option>
+
+                            <option value="Bajo">
+                                Bajo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="purchaseTime">
+                            Tiempo estimado de compra
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="purchaseTime" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Realiza pedido">
+                                Realiza pedido
+                            </option>
+
+                            <option value="1 mes">
+                                1 mes
+                            </option>
+
+                            <option value="3 meses">
+                                3 meses
+                            </option>
+
+                            <option value="6 meses">
+                                6 meses
+                            </option>
+
+                            <option value="Más de 6 meses">
+                                Más de 6 meses
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+         PASO 07 - SEGUIMIENTO COMERCIAL
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloSeguimiento">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        07
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloSeguimiento">
+                            Seguimiento comercial
+                        </h2>
+
+                        <p>
+                            Defina responsables y acciones posteriores
+                            al contacto realizado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="nextAction">
+                            Acción siguiente
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="nextAction" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="llamar">
+                                llamar
+                            </option>
+
+                            <option value="Visitar">
+                                Visitar
+                            </option>
+
+                            <option value="Enviar catálogo">
+                                Enviar catálogo
+                            </option>
+
+                            <option value="Enviar lista de precios">
+                                Enviar lista de precios
+                            </option>
+
+                            <option value="Agendar demostración">
+                                Agendar demostración
+                            </option>
+
+                            <option value="Invitar a capacitación">
+                                Invitar a capacitación
+                            </option>
+
+                            <option value="Sin seguimiento">
+                                Sin seguimiento
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="commercialAgent">
+                            Comercial que realiza el registro
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="commercialAgent" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Juan Carlos Garcia">
+                                Juan Carlos Garcia
+                            </option>
+
+                            <option value="Felipe Sabas">
+                                Felipe Sabas
+                            </option>
+
+                            <option value="Stefanny castellanos">
+                                Stefanny castellanos
+                            </option>
+
+                            <option value="Alejandra Murillo">
+                                Alejandra Murillo
+                            </option>
+
+                            <option value="Diego Parra">
+                                Diego Parra
+                            </option>
+
+                            <option value="Ivonne Recalde">
+                                Ivonne Recalde
+                            </option>
+
+                            <option value="David Rivas">
+                                David Rivas
+                            </option>
+
+                            <option value="Mary luz cardona">
+                                Mary luz cardona
+                            </option>
+
+                            <option value="Eliana Agudelo">
+                                Eliana Agudelo
+                            </option>
+
+                            <option value="Catherin Tenjo">
+                                Catherin Tenjo
+                            </option>
+
+                            <option value="Viviana Sotelo">
+                                Viviana Sotelo
+                            </option>
+
+                            <option value="Sindy Camacho">
+                                Sindy Camacho
+                            </option>
+
+                            <option value="Jennifer Clavijo">
+                                Jennifer Clavijo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="followUpResponsible">
+                            Responsable del seguimiento
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="followUpResponsible" required>
+
+                            <option value="">
+                                Seleccione una opción
+                            </option>
+
+                            <option value="Bogotá">
+                                Bogotá
+                            </option>
+
+                            <option value="Antioquia">
+                                Antioquia
+                            </option>
+
+                            <option value="Costa alta">
+                                Costa alta
+                            </option>
+
+                            <option value="Santander">
+                                Santander
+                            </option>
+
+                            <option value="Tolima">
+                                Tolima
+                            </option>
+
+                            <option value="Eje cafetero">
+                                Eje cafetero
+                            </option>
+
+                            <option value="Valle">
+                                Valle
+                            </option>
+
+                            <option value="llanos">
+                                llanos
+                            </option>
+
+                            <option value="Otro">
+                                Otro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group" id="followUpOtherGroup" hidden>
+
+                        <label for="followUpOther">
+                            Si seleccionó otro, indique cuál
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <input type="text" id="followUpOther" autocomplete="off">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+         PASO 08 - INFORMACIÓN ADICIONAL
+    ================================================== -->
+
+            <section class="gestion-card" aria-labelledby="tituloAdicional">
+
+                <div class="section-heading">
+
+                    <span class="step-number">
+                        08
+                    </span>
+
+                    <div>
+
+                        <h2 id="tituloAdicional">
+                            Información adicional
+                        </h2>
+
+                        <p>
+                            Registre observaciones relevantes
+                            para el seguimiento posterior.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-grid">
+
+                    <div class="form-group full-width">
+
+                        <label for="visitorComments">
+                            ¿Qué comentó el visitante?
+                        </label>
+
+                        <textarea id="visitorComments" rows="5" maxlength="1500"
+                            placeholder="Observaciones relevantes de la conversación.">
+                </textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="commercialInformationConsent">
+                            ¿Acepta recibir información comercial de NOVALFARM SAS?
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="commercialInformationConsent" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="sampleDelivery">
+                            Entrega muestra
+                            <span aria-hidden="true">*</span>
+                        </label>
+
+                        <select id="sampleDelivery" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="commercial-submit">
+
+                    <div id="commercialMessage" class="gestion-message commercial-message" role="status"
+                        aria-live="polite">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="commercialSubmit">
+
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true">
+                        </i>
+
+                        Registrar gestión comercial
+
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" id="newCommercialManagement" hidden>
+
+                        <i class="fa-solid fa-user-plus" aria-hidden="true">
+                        </i>
+
+                        Nueva gestión
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+        </form>
+
+
+    </main>
+    <!--  FIN MAIN -->
+    <!--  INICIO FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <!-- COLUMNA -->
+            <div class="footer-column">
+                <h3>Novalfarm SAS</h3>
+                <p>
+                    Compañía farmacéutica colombiana, con más de 30 años de experiencia.
+                </p>
+            </div>
+            <!-- COLUMNA -->
+            <div class="footer-column">
+                <h3></h3>
+                <a href="https://novalfarm.com.co/" target="_blank" rel="noopener noreferrer"> Calle 2A # 69F-14 </a>
+                <a href="mailto:contactenos@novalfarm.com.co"> E-mail: contactenos@novalfarm.com.co </a>
+                <a href="tel:+576014144531"> Teléfono: +57 601 4144531 </a>
+                <a href="tel:+573174041737"> Ventas y Facturación: +57 317 4041737 </a>
+                <a href="tel:+573166933672"> Área Administrativa: +57 316 6933672 </a>
+                <a href="https://novalfarm.com.co/pdf/POLITICA-DE-TRATAMIENTO-DE-DATOS-PERSONALES.pdf" target="_blank"
+                    rel="noopener noreferrer"> Política de tratamiento de datos personales </a>
+            </div>
+            <!-- COLUMNA -->
+            <div class="footer-column">
+                <h3></h3>
+                <!-- <a href="../pages/soporte-mesa-de-ayuda.html"> Mesa de ayuda </a> -->
+            </div>
+        </div>
+        <!-- COPYRIGHT -->
+        <div class="footer-bottom">
+            <p>© 2026 Novalfarm SAS. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FIN FOOTER -->
+    <!--  SCRIPTS -->
+    <script src="../scripts/scripts.js" defer></script>
+    <script src="../scripts/gestionc.js" defer></script>
+
+
+</body>
+
+</html>
