@@ -70,6 +70,12 @@ const estadoDashboard = {
     cargando:
         false,
 
+    solicitudListado:
+        0,
+
+    solicitudDetalle:
+        0,
+
     filtros: {
 
         buscar:
@@ -877,13 +883,12 @@ function establecerMetricasError() {
 
 async function cargarGestiones() {
 
-    if (
-        estadoDashboard.cargando
-    ) {
+    /* --------------------------------------------------------
+       IDENTIFICAR ESTA SOLICITUD
+    -------------------------------------------------------- */
 
-        return;
-
-    }
+    const solicitudActual =
+        ++estadoDashboard.solicitudListado;
 
 
     estadoDashboard.cargando =
@@ -937,12 +942,40 @@ async function cargarGestiones() {
             });
 
 
+        /* ----------------------------------------------------
+           DESCARTAR RESPUESTA OBSOLETA
+        ---------------------------------------------------- */
+
+        if (
+            solicitudActual !==
+            estadoDashboard.solicitudListado
+        ) {
+
+            return;
+
+        }
+
+
         procesarRespuestaGestiones(
             datos
         );
 
     }
     catch (error) {
+
+        /* ----------------------------------------------------
+           IGNORAR ERROR DE UNA CONSULTA OBSOLETA
+        ---------------------------------------------------- */
+
+        if (
+            solicitudActual !==
+            estadoDashboard.solicitudListado
+        ) {
+
+            return;
+
+        }
+
 
         console.error(
             "CVDC 2026: error consultando gestiones.",
@@ -959,8 +992,19 @@ async function cargarGestiones() {
     }
     finally {
 
-        estadoDashboard.cargando =
-            false;
+        /* ----------------------------------------------------
+           SOLO LA SOLICITUD ACTUAL LIBERA EL ESTADO
+        ---------------------------------------------------- */
+
+        if (
+            solicitudActual ===
+            estadoDashboard.solicitudListado
+        ) {
+
+            estadoDashboard.cargando =
+                false;
+
+        }
 
     }
 
@@ -1441,7 +1485,6 @@ function actualizarPaginacion() {
 function paginaAnterior() {
 
     if (
-        estadoDashboard.cargando ||
         estadoDashboard.paginaActual <= 1
     ) {
 
@@ -1461,7 +1504,6 @@ function paginaAnterior() {
 function paginaSiguiente() {
 
     if (
-        estadoDashboard.cargando ||
         estadoDashboard.paginaActual >=
         estadoDashboard.totalPaginas
     ) {
@@ -1534,6 +1576,14 @@ async function abrirDetalleGestion(
     botonOrigen
 ) {
 
+    /* --------------------------------------------------------
+       IDENTIFICAR SOLICITUD DE DETALLE
+    -------------------------------------------------------- */
+
+    const solicitudActual =
+        ++estadoDashboard.solicitudDetalle;
+
+
     prepararModal(
         idGestion
     );
@@ -1573,6 +1623,33 @@ async function abrirDetalleGestion(
             });
 
 
+        /* ----------------------------------------------------
+           DESCARTAR RESPUESTA OBSOLETA
+        ---------------------------------------------------- */
+
+        if (
+            solicitudActual !==
+            estadoDashboard.solicitudDetalle
+        ) {
+
+            return;
+
+        }
+
+
+        /* ----------------------------------------------------
+           VERIFICAR QUE EL MODAL SIGA ABIERTO
+        ---------------------------------------------------- */
+
+        if (
+            DOM.modal.hidden
+        ) {
+
+            return;
+
+        }
+
+
         if (
             !datos.gestion
         ) {
@@ -1599,6 +1676,33 @@ async function abrirDetalleGestion(
     }
     catch (error) {
 
+        /* ----------------------------------------------------
+           IGNORAR ERROR OBSOLETO
+        ---------------------------------------------------- */
+
+        if (
+            solicitudActual !==
+            estadoDashboard.solicitudDetalle
+        ) {
+
+            return;
+
+        }
+
+
+        /* ----------------------------------------------------
+           SI EL MODAL YA FUE CERRADO, NO MOSTRAR ERROR
+        ---------------------------------------------------- */
+
+        if (
+            DOM.modal.hidden
+        ) {
+
+            return;
+
+        }
+
+
         console.error(
             "CVDC 2026: error consultando detalle.",
             error
@@ -1621,7 +1725,6 @@ async function abrirDetalleGestion(
     }
 
 }
-
 
 /* ============================================================
    17. PREPARAR MODAL
@@ -2029,10 +2132,14 @@ function cerrarModal() {
 
     }
 
+    /* --------------------------------------------------------
+       INVALIDAR CUALQUIER CONSULTA DE DETALLE PENDIENTE
+    -------------------------------------------------------- */
+
+    estadoDashboard.solicitudDetalle++;
 
     DOM.modal.hidden =
         true;
-
 
     document.body.classList.remove(
         "modal-open"
