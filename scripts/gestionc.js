@@ -6,7 +6,6 @@
 
 "use strict";
 
-
 /* =========================================================
    01. CONFIGURACIÓN
 ========================================================= */
@@ -23,6 +22,11 @@ const CONFIG_GESTION = {
 
 };
 
+/* =========================================================
+ESTADO GLOBAL DE LA GESTIÓN
+========================================================= */
+
+let currentRequestId = "";
 
 /* =========================================================
    02. CÓDIGOS ENTRY - FORM_DOS
@@ -98,7 +102,6 @@ const FORM_DOS_ENTRIES = {
 
 };
 
-
 /* =========================================================
    03. REFERENCIAS DOM - BÚSQUEDA
 ========================================================= */
@@ -121,7 +124,6 @@ const searchResults =
 const resultsList =
     document.getElementById("resultsList");
 
-
 /* =========================================================
    04. REFERENCIAS DOM - PARTICIPANTE
 ========================================================= */
@@ -137,7 +139,6 @@ const changeParticipant =
 
 const continueCommercial =
     document.getElementById("continueCommercial");
-
 
 const participantFields = {
 
@@ -179,7 +180,6 @@ const participantFields = {
 
 };
 
-
 /* =========================================================
    05. REFERENCIAS DOM - FORMULARIO COMERCIAL
 ========================================================= */
@@ -195,7 +195,6 @@ const commercialMessage =
 
 const newCommercialManagement =
     document.getElementById("newCommercialManagement");
-
 
 /* =========================================================
    06. CAMPOS DEL FORMULARIO COMERCIAL
@@ -262,7 +261,6 @@ const commercialFields = {
 
 };
 
-
 /* =========================================================
    07. GRUPOS CONDICIONALES
 ========================================================= */
@@ -275,7 +273,6 @@ const interestLineOtherGroup =
 
 const followUpOtherGroup =
     document.getElementById("followUpOtherGroup");
-
 
 /* =========================================================
    08. VALIDACIÓN INICIAL DEL DOM
@@ -311,12 +308,10 @@ function validarElementosDOM() {
 
     };
 
-
     const faltantes =
         Object.entries(elementosObligatorios)
             .filter(([, elemento]) => !elemento)
             .map(([nombre]) => nombre);
-
 
     if (faltantes.length > 0) {
 
@@ -329,11 +324,9 @@ function validarElementosDOM() {
 
     }
 
-
     return true;
 
 }
-
 
 /* =========================================================
    09. MENSAJES DE BÚSQUEDA
@@ -350,7 +343,6 @@ function mostrarMensaje(
     searchMessage.className =
         "gestion-message";
 
-
     if (tipo) {
 
         searchMessage.classList.add(
@@ -361,7 +353,6 @@ function mostrarMensaje(
 
 }
 
-
 function limpiarMensaje() {
 
     searchMessage.textContent = "";
@@ -370,7 +361,6 @@ function limpiarMensaje() {
         "gestion-message";
 
 }
-
 
 /* =========================================================
    10. MENSAJES FORMULARIO COMERCIAL
@@ -387,7 +377,6 @@ function mostrarMensajeComercial(
     commercialMessage.className =
         "gestion-message commercial-message";
 
-
     if (tipo) {
 
         commercialMessage.classList.add(
@@ -398,7 +387,6 @@ function mostrarMensajeComercial(
 
 }
 
-
 function limpiarMensajeComercial() {
 
     commercialMessage.textContent = "";
@@ -407,7 +395,6 @@ function limpiarMensajeComercial() {
         "gestion-message commercial-message";
 
 }
-
 
 /* =========================================================
    11. ESTADO DE BÚSQUEDA
@@ -423,14 +410,12 @@ function establecerEstadoBusqueda(
     searchInput.disabled =
         buscando;
 
-
     searchButton.innerHTML =
         buscando
             ? '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Buscando...'
             : '<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Buscar';
 
 }
-
 
 /* =========================================================
    12. BUSCAR PARTICIPANTES
@@ -448,14 +433,12 @@ async function buscarParticipantes(
     resultsList.innerHTML =
         "";
 
-
     try {
 
         const url =
             new URL(
                 CONFIG_GESTION.API_URL
             );
-
 
         url.searchParams.set(
             "action",
@@ -467,12 +450,10 @@ async function buscarParticipantes(
             termino
         );
 
-
         const response =
             await fetch(
                 url.toString()
             );
-
 
         if (!response.ok) {
 
@@ -482,10 +463,8 @@ async function buscarParticipantes(
 
         }
 
-
         const data =
             await response.json();
-
 
         if (!data.ok) {
 
@@ -495,7 +474,6 @@ async function buscarParticipantes(
             );
 
         }
-
 
         if (
             !Array.isArray(data.resultados) ||
@@ -511,11 +489,9 @@ async function buscarParticipantes(
 
         }
 
-
         mostrarResultados(
             data.resultados
         );
-
 
     } catch (error) {
 
@@ -524,12 +500,10 @@ async function buscarParticipantes(
             error
         );
 
-
         mostrarMensaje(
             "No fue posible consultar los participantes. Intente nuevamente.",
             "error"
         );
-
 
     } finally {
 
@@ -540,7 +514,6 @@ async function buscarParticipantes(
     }
 
 }
-
 
 /* =========================================================
    13. MOSTRAR RESULTADOS
@@ -553,7 +526,6 @@ function mostrarResultados(
     resultsList.innerHTML =
         "";
 
-
     participantes.forEach(
         (participante) => {
 
@@ -565,12 +537,10 @@ function mostrarResultados(
             item.className =
                 "result-item";
 
-
             const info =
                 document.createElement(
                     "div"
                 );
-
 
             const nombre =
                 document.createElement(
@@ -584,7 +554,6 @@ function mostrarResultados(
                 participante.nombre ||
                 "Sin nombre";
 
-
             const meta =
                 document.createElement(
                     "div"
@@ -592,7 +561,6 @@ function mostrarResultados(
 
             meta.className =
                 "result-meta";
-
 
             const telefono =
                 document.createElement(
@@ -603,7 +571,6 @@ function mostrarResultados(
                 participante.telefono ||
                 "Sin teléfono";
 
-
             const correo =
                 document.createElement(
                     "span"
@@ -613,12 +580,10 @@ function mostrarResultados(
                 participante.correo ||
                 "Sin correo";
 
-
             meta.append(
                 telefono,
                 correo
             );
-
 
             const id =
                 document.createElement(
@@ -632,13 +597,11 @@ function mostrarResultados(
                 participante.id ||
                 "";
 
-
             info.append(
                 nombre,
                 meta,
                 id
             );
-
 
             const button =
                 document.createElement(
@@ -654,7 +617,6 @@ function mostrarResultados(
             button.textContent =
                 "Seleccionar";
 
-
             button.addEventListener(
                 "click",
                 () => {
@@ -666,12 +628,10 @@ function mostrarResultados(
                 }
             );
 
-
             item.append(
                 info,
                 button
             );
-
 
             resultsList.appendChild(
                 item
@@ -680,10 +640,8 @@ function mostrarResultados(
         }
     );
 
-
     searchResults.hidden =
         false;
-
 
     mostrarMensaje(
         `${participantes.length} participante(s) encontrado(s).`,
@@ -691,7 +649,6 @@ function mostrarResultados(
     );
 
 }
-
 
 /* =========================================================
    14. OBTENER PARTICIPANTE
@@ -715,14 +672,12 @@ async function seleccionarParticipante(
 
     }
 
-
     try {
 
         const url =
             new URL(
                 CONFIG_GESTION.API_URL
             );
-
 
         url.searchParams.set(
             "action",
@@ -734,12 +689,10 @@ async function seleccionarParticipante(
             id
         );
 
-
         const response =
             await fetch(
                 url.toString()
             );
-
 
         if (!response.ok) {
 
@@ -749,10 +702,8 @@ async function seleccionarParticipante(
 
         }
 
-
         const data =
             await response.json();
-
 
         if (
             !data.ok ||
@@ -766,11 +717,9 @@ async function seleccionarParticipante(
 
         }
 
-
         cargarParticipante(
             data.participante
         );
-
 
     } catch (error) {
 
@@ -778,7 +727,6 @@ async function seleccionarParticipante(
             "Error obteniendo participante:",
             error
         );
-
 
         mostrarMensaje(
             "No fue posible cargar la información del participante.",
@@ -788,7 +736,6 @@ async function seleccionarParticipante(
     }
 
 }
-
 
 /* =========================================================
    15. CARGAR PARTICIPANTE
@@ -834,10 +781,8 @@ function cargarParticipante(
     participantFields.autorizacion.value =
         participante.autorizacion || "";
 
-
     participantOtherGroup.hidden =
         !participantFields.otro.value.trim();
-
 
     searchResults.hidden =
         true;
@@ -848,10 +793,8 @@ function cargarParticipante(
     commercialForm.hidden =
         true;
 
-
     continueCommercial.disabled =
         false;
-
 
     participantSection.scrollIntoView({
         behavior: "smooth",
@@ -859,7 +802,6 @@ function cargarParticipante(
     });
 
 }
-
 
 /* =========================================================
    16. LIMPIAR PARTICIPANTE
@@ -884,7 +826,6 @@ function limpiarParticipante() {
 
 }
 
-
 /* =========================================================
    17. RESTABLECER CAMPOS CONDICIONALES
 ========================================================= */
@@ -899,7 +840,6 @@ function restablecerCamposCondicionales() {
 
     commercialFields.lugarCompraOtro.value =
         "";
-
 
     interestLineOtherGroup.hidden =
         true;
@@ -922,7 +862,6 @@ function restablecerCamposCondicionales() {
 
 }
 
-
 /* =========================================================
    18. HABILITAR FORMULARIO COMERCIAL
 ========================================================= */
@@ -943,7 +882,6 @@ function habilitarFormularioComercial() {
         );
 
 }
-
 
 /* =========================================================
    19. ACTUALIZAR CAMPO CONDICIONAL - LUGAR DE COMPRA
@@ -972,7 +910,6 @@ function actualizarLugarCompraOtro() {
 
 }
 
-
 /* =========================================================
    20. ACTUALIZAR CAMPO CONDICIONAL - LÍNEA DE INTERÉS
 ========================================================= */
@@ -1000,7 +937,6 @@ function actualizarLineaInteresOtra() {
 
 }
 
-
 /* =========================================================
    21. ACTUALIZAR CAMPO CONDICIONAL - RESPONSABLE
 ========================================================= */
@@ -1011,13 +947,11 @@ function actualizarResponsableOtro() {
         commercialFields.responsable.value ===
         "Otro";
 
-
     followUpOtherGroup.hidden =
         !mostrar;
 
     commercialFields.responsableOtro.required =
         mostrar;
-
 
     if (!mostrar) {
 
@@ -1027,7 +961,6 @@ function actualizarResponsableOtro() {
     }
 
 }
-
 
 /* =========================================================
    22. OBTENER DATOS DE LA GESTIÓN
@@ -1076,7 +1009,6 @@ function obtenerDatosGestion() {
 
         autorizacion:
             participantFields.autorizacion.value.trim(),
-
 
         /* -------------------------------------------------
            GESTIÓN COMERCIAL
@@ -1143,6 +1075,125 @@ function obtenerDatosGestion() {
 
 }
 
+/* =========================================================
+   OBTENER GENERAR REQUEST_ID
+========================================================= */
+
+function obtenerRequestIdGestion() {
+
+    if (currentRequestId) {
+
+        return currentRequestId;
+
+    }
+
+    if (
+        window.crypto &&
+        typeof window.crypto.randomUUID === "function"
+    ) {
+
+        currentRequestId =
+            window.crypto.randomUUID();
+
+    } else {
+
+        currentRequestId =
+            "REQ-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2, 12);
+
+    }
+
+    return currentRequestId;
+
+}
+
+/* =========================================================
+   CONSTRUIR PAYLOAD CVDC2026_API
+========================================================= */
+
+function construirPayloadAPI(
+    datos
+) {
+
+    return {
+
+        action:
+            "registrargestion",
+
+        requestId:
+            obtenerRequestIdGestion(),
+
+        participanteId:
+            participantFields.id.value.trim(),
+
+        gestion: {
+
+            poderCompra:
+                datos.poderCompra ?? "",
+
+            compraProductos:
+                datos.compraActual ?? "",
+
+            dondeCompra:
+                datos.lugarCompra ?? "",
+
+            otroDondeCompra:
+                datos.lugarCompraOtro ?? "",
+
+            lineaInteres:
+                datos.lineaInteres ?? "",
+
+            otraLinea:
+                datos.lineaInteresOtra ?? "",
+
+            productosInteres:
+                datos.productosInteres ?? "",
+
+            deseaInformacion:
+                datos.deseaInformacion ?? "",
+
+            solicitaVisita:
+                datos.solicitaVisita ?? "",
+
+            nivelInteres:
+                datos.nivelInteres ?? "",
+
+            potencialCompra:
+                datos.potencialCompra ?? "",
+
+            tiempoCompra:
+                datos.tiempoCompra ?? "",
+
+            accionSiguiente:
+                datos.accionSiguiente ?? "",
+
+            comercialRegistro:
+                datos.comercial ?? "",
+
+            responsableSeguimiento:
+                datos.responsable ?? "",
+
+            otroResponsable:
+                datos.responsableOtro ?? "",
+
+            comentarioVisitante:
+                datos.comentario ?? "",
+
+            aceptaInfoComercial:
+                datos.aceptaInformacion ?? "",
+
+            entregaMuestra:
+                datos.entregaMuestra ?? ""
+
+        }
+
+    };
+
+}
 
 /* =========================================================
    23. VALIDAR GESTIÓN COMERCIAL
@@ -1151,7 +1202,6 @@ function obtenerDatosGestion() {
 function validarGestionComercial() {
 
     limpiarMensajeComercial();
-
 
     if (
         !participantFields.id.value.trim()
@@ -1165,7 +1215,6 @@ function validarGestionComercial() {
         return false;
 
     }
-
 
     if (
         commercialFields.lugarCompra.value === "OTRA" &&
@@ -1183,7 +1232,6 @@ function validarGestionComercial() {
 
     }
 
-
     if (
         commercialFields.lineaInteres.value === "Otra" &&
         !commercialFields.lineaInteresOtra.value.trim()
@@ -1199,7 +1247,6 @@ function validarGestionComercial() {
         return false;
 
     }
-
 
     if (
         commercialFields.responsable.value === "Otro" &&
@@ -1217,13 +1264,11 @@ function validarGestionComercial() {
 
     }
 
-
     if (
         !commercialForm.checkValidity()
     ) {
 
         commercialForm.reportValidity();
-
 
         mostrarMensajeComercial(
             "Complete todos los campos obligatorios antes de registrar la gestión.",
@@ -1234,11 +1279,9 @@ function validarGestionComercial() {
 
     }
 
-
     return true;
 
 }
-
 
 /* =========================================================
    24. CONSTRUIR PAYLOAD FORM_DOS
@@ -1251,7 +1294,6 @@ function construirFormData(
     const formData =
         new FormData();
 
-
     Object.entries(
         FORM_DOS_ENTRIES
     ).forEach(
@@ -1259,7 +1301,6 @@ function construirFormData(
 
             const valor =
                 datos[campo] ?? "";
-
 
             formData.append(
                 entry,
@@ -1269,38 +1310,61 @@ function construirFormData(
         }
     );
 
-
     return formData;
 
 }
 
-
 /* =========================================================
-   25. ENVIAR GESTIÓN A GOOGLE FORMS
+   ENVIAR GESTIÓN A CVDC2026_API
 ========================================================= */
 
 async function enviarGestionComercial(
-    formData
+    payload
 ) {
 
-    await fetch(
-        CONFIG_GESTION.FORM_DOS_URL,
-        {
+    const response =
+        await fetch(
+            CONFIG_GESTION.API_URL,
+            {
+                method:
+                    "POST",
 
-            method:
-                "POST",
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
 
-            mode:
-                "no-cors",
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
 
-            body:
-                formData
+    if (!response.ok) {
 
-        }
-    );
+        throw new Error(
+            "HTTP_" +
+            response.status
+        );
+
+    }
+
+    const resultado =
+        await response.json();
+
+    if (!resultado.ok) {
+
+        throw new Error(
+            resultado.error ||
+            "La API rechazó el registro."
+        );
+
+    }
+
+    return resultado;
 
 }
-
 
 /* =========================================================
    26. ESTADO DE ENVÍO
@@ -1325,7 +1389,6 @@ function establecerEstadoEnvio(
 
             break;
 
-
         case "exito":
 
             commercialSubmit.disabled =
@@ -1338,7 +1401,6 @@ function establecerEstadoEnvio(
                 false;
 
             break;
-
 
         default:
 
@@ -1360,7 +1422,6 @@ function establecerEstadoEnvio(
 
 }
 
-
 /* =========================================================
    27. FINALIZAR GESTIÓN
 ========================================================= */
@@ -1380,10 +1441,8 @@ function finalizarGestion() {
             }
         );
 
-
     continueCommercial.disabled =
         true;
-
 
     establecerEstadoEnvio(
         "exito"
@@ -1391,12 +1450,13 @@ function finalizarGestion() {
 
 }
 
-
 /* =========================================================
    28. NUEVA GESTIÓN
 ========================================================= */
 
 function iniciarNuevaGestion() {
+
+    currentRequestId = "";
 
     habilitarFormularioComercial();
 
@@ -1406,18 +1466,15 @@ function iniciarNuevaGestion() {
     commercialForm.hidden =
         true;
 
-
     participantSection.hidden =
         true;
 
     searchResults.hidden =
         true;
 
-
     limpiarParticipante();
 
     restablecerCamposCondicionales();
-
 
     establecerEstadoEnvio(
         "normal"
@@ -1426,11 +1483,9 @@ function iniciarNuevaGestion() {
     continueCommercial.disabled =
         false;
 
-
     limpiarMensaje();
 
     limpiarMensajeComercial();
-
 
     searchInput.value =
         "";
@@ -1438,13 +1493,10 @@ function iniciarNuevaGestion() {
     searchInput.disabled =
         false;
 
-
     searchButton.disabled =
         false;
 
-
     searchInput.focus();
-
 
     window.scrollTo({
         top: 0,
@@ -1452,7 +1504,6 @@ function iniciarNuevaGestion() {
     });
 
 }
-
 
 /* =========================================================
    29. EVENTO - BUSCAR PARTICIPANTE
@@ -1470,9 +1521,7 @@ function registrarEventos() {
             const termino =
                 searchInput.value.trim();
 
-
             limpiarMensaje();
-
 
             if (
                 termino.length <
@@ -1490,14 +1539,12 @@ function registrarEventos() {
 
             }
 
-
             await buscarParticipantes(
                 termino
             );
 
         }
     );
-
 
     /* -----------------------------------------------------
        BUSCAR OTRO PARTICIPANTE
@@ -1507,6 +1554,8 @@ function registrarEventos() {
         "click",
         () => {
 
+            currentRequestId = "";
+
             habilitarFormularioComercial();
 
             commercialForm.reset();
@@ -1514,11 +1563,9 @@ function registrarEventos() {
             commercialForm.hidden =
                 true;
 
-
             limpiarParticipante();
 
             restablecerCamposCondicionales();
-
 
             participantSection.hidden =
                 true;
@@ -1533,17 +1580,14 @@ function registrarEventos() {
                 "normal"
             );
 
-
             limpiarMensaje();
 
             limpiarMensajeComercial();
-
 
             searchInput.value =
                 "";
 
             searchInput.focus();
-
 
             window.scrollTo({
                 top: 0,
@@ -1552,7 +1596,6 @@ function registrarEventos() {
 
         }
     );
-
 
     /* -----------------------------------------------------
        CONTINUAR GESTIÓN
@@ -1563,7 +1606,6 @@ function registrarEventos() {
         () => {
 
             limpiarMensaje();
-
 
             if (
                 !participantFields.id.value.trim()
@@ -1578,13 +1620,10 @@ function registrarEventos() {
 
             }
 
-
             habilitarFormularioComercial();
-
 
             commercialForm.hidden =
                 false;
-
 
             commercialForm.scrollIntoView({
                 behavior: "smooth",
@@ -1593,7 +1632,6 @@ function registrarEventos() {
 
         }
     );
-
 
     /* -----------------------------------------------------
        CAMPOS CONDICIONALES
@@ -1604,18 +1642,15 @@ function registrarEventos() {
         actualizarLugarCompraOtro
     );
 
-
     commercialFields.lineaInteres.addEventListener(
         "change",
         actualizarLineaInteresOtra
     );
 
-
     commercialFields.responsable.addEventListener(
         "change",
         actualizarResponsableOtro
     );
-
 
     /* -----------------------------------------------------
        REGISTRAR GESTIÓN COMERCIAL
@@ -1627,7 +1662,6 @@ function registrarEventos() {
 
             event.preventDefault();
 
-
             if (
                 !validarGestionComercial()
             ) {
@@ -1636,61 +1670,81 @@ function registrarEventos() {
 
             }
 
-
-            const datos =
-                obtenerDatosGestion();
-
-
-            const formData =
-                construirFormData(
+            const payload =
+                construirPayloadAPI(
                     datos
                 );
 
             establecerEstadoEnvio(
-                "enviado"
+                "enviando"
             );
-
 
             mostrarMensajeComercial(
                 "Registrando gestión comercial..."
             );
 
-
             try {
 
-                await enviarGestionComercial(
-                    formData
-                );
+                const resultado =
+                    await enviarGestionComercial(
+                        payload
+                    );
 
+                if (
+                    resultado.estado ===
+                    "gestion_registrada"
+                ) {
 
-                mostrarMensajeComercial(
-                    "La solicitud de registro fue enviada. Verifique el registro en la hoja de respuestas.",
-                    "success"
-                );
+                    mostrarMensajeComercial(
+                        "Gestión comercial registrada correctamente. Código: " +
+                        resultado.idGestion,
+                        "success"
+                    );
 
+                } else if (
+                    resultado.estado ===
+                    "gestion_ya_registrada"
+                ) {
+
+                    mostrarMensajeComercial(
+                        "La gestión ya había sido registrada correctamente. Código: " +
+                        resultado.idGestion,
+                        "success"
+                    );
+
+                } else {
+
+                    throw new Error(
+                        "Respuesta inesperada del servidor."
+                    );
+
+                }
 
                 finalizarGestion();
 
-
-            } catch (error) {
+            }
+            catch (error) {
 
                 console.error(
-                    "Error enviando FORM_DOS:",
-                    error
+                    "Error registrando gestión comercial."
                 );
 
-
                 mostrarMensajeComercial(
-                    "No fue posible enviar la gestión comercial. Intente nuevamente.",
+                    "No fue posible confirmar el registro. Intente nuevamente.",
                     "error"
                 );
 
-
-            } finally {
+            }
+            finally {
 
                 if (
                     !newCommercialManagement.hidden
                 ) {
+
+                    commercialSubmit.disabled =
+                        true;
+
+                } else {
 
                     establecerEstadoEnvio(
                         "normal"
@@ -1701,8 +1755,8 @@ function registrarEventos() {
             }
 
         }
-    );
 
+    );
 
     /* -----------------------------------------------------
        NUEVA GESTIÓN
@@ -1712,9 +1766,7 @@ function registrarEventos() {
         "click",
         iniciarNuevaGestion
     );
-
 }
-
 
 /* =========================================================
    31. INICIALIZACIÓN
@@ -1734,9 +1786,15 @@ function inicializarGestionComercial() {
 
     }
 
+    const datos =
+        obtenerDatosGestion();
+
+    const payload =
+        construirPayloadAPI(
+            datos
+        );
 
     restablecerCamposCondicionales();
-
 
     commercialForm.hidden =
         true;
@@ -1756,13 +1814,11 @@ function inicializarGestionComercial() {
 
     registrarEventos();
 
-
     console.info(
         "CVDC 2026 - Módulo de Gestión Comercial inicializado correctamente."
     );
 
 }
-
 
 /* =========================================================
    INICIAR APLICACIÓN
