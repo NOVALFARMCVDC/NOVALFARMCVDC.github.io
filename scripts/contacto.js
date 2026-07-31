@@ -19,6 +19,65 @@ const grupoQuienesOtro =
 const quienesOtroInput =
     document.getElementById("quienesb");
 
+
+/* ======================================================
+ENVIO FORM CON TIMEOUT
+========================================================= */
+
+async function enviarFormUnoConTimeout(
+    url,
+    formData
+) {
+
+    const controlador =
+        new AbortController();
+
+    const timeout =
+        setTimeout(
+            () => {
+                controlador.abort();
+            },
+            TIMEOUT_FORM_UNO
+        );
+
+    try {
+
+        await fetch(
+            url,
+            {
+                method: "POST",
+                mode: "no-cors",
+                body: formData,
+                signal: controlador.signal
+            }
+        );
+
+        return true;
+
+    } catch (error) {
+
+        if (
+            error.name === "AbortError"
+        ) {
+
+            throw new Error(
+                "TIMEOUT_FORM_UNO"
+            );
+
+        }
+
+        throw error;
+
+    } finally {
+
+        clearTimeout(
+            timeout
+        );
+
+    }
+
+}
+
 /* =========================================================
    VALIDAR EXISTENCIA
 ========================================================= */
@@ -103,6 +162,8 @@ if (form) {
             const formURL =
                 "https://docs.google.com/forms/d/e/1FAIpQLSfTsuP86TGgXtvGI1_HN9LwRnlbXPwGm_fjJj-lT1Gh7DT5MA/formResponse";
 
+            const TIMEOUT_FORM_UNO = 15000;
+
             /* =============================================
                FORM DATA
             ============================================== */
@@ -116,15 +177,9 @@ if (form) {
 
             try {
 
-                await fetch(
+                await enviarFormUnoConTimeout(
                     formURL,
-                    {
-                        method: "POST",
-
-                        mode: "no-cors",
-
-                        body: formData
-                    }
+                    formData
                 );
 
                 /* =========================================
@@ -155,14 +210,30 @@ if (form) {
 
             } catch (error) {
 
-                /* =========================================
-                   ERROR
-                ========================================== */
-
-                showMessage(
-                    "❌ Ocurrió un error al realizar el registro.",
-                    "error"
+                console.error(
+                    "CVDC 2026: error durante el registro.",
+                    error
                 );
+
+                if (
+                    error.message ===
+                    "TIMEOUT_FORM_UNO"
+                ) {
+
+                    mostrarMensaje(
+                        "No fue posible confirmar el envío dentro del tiempo esperado. Verifique su conexión e intente nuevamente.",
+                        "error"
+                    );
+
+                } else {
+
+                    mostrarMensaje(
+                        "No fue posible enviar la información. Verifique su conexión e intente nuevamente.",
+                        "error"
+                    );
+
+                }
+
             }
 
             /* =============================================
