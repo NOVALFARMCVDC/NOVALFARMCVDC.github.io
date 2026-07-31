@@ -437,6 +437,31 @@ async function consultarAPI(
     parametros
 ) {
 
+    /* --------------------------------------------------------
+       VALIDAR CONECTIVIDAD
+    -------------------------------------------------------- */
+
+    if (
+        navigator.onLine === false
+    ) {
+
+        const error =
+            new Error(
+                "No hay conexión a Internet."
+            );
+
+        error.tipo =
+            "OFFLINE";
+
+        throw error;
+
+    }
+
+
+    /* --------------------------------------------------------
+       CONSTRUIR URL
+    -------------------------------------------------------- */
+
     const url =
         new URL(
             CONFIG.API_URL
@@ -465,6 +490,10 @@ async function consultarAPI(
     );
 
 
+    /* --------------------------------------------------------
+       CONTROLADOR DE TIMEOUT
+    -------------------------------------------------------- */
+
     const controlador =
         new AbortController();
 
@@ -481,6 +510,10 @@ async function consultarAPI(
 
 
     try {
+
+        /* ----------------------------------------------------
+           CONSULTA
+        ---------------------------------------------------- */
 
         const respuesta =
             await fetch(
@@ -500,30 +533,77 @@ async function consultarAPI(
             );
 
 
+        /* ----------------------------------------------------
+           VALIDAR RESPUESTA HTTP
+        ---------------------------------------------------- */
+
         if (
             !respuesta.ok
         ) {
 
-            throw new Error(
-                `HTTP ${respuesta.status}`
-            );
+            const error =
+                new Error(
+                    `HTTP ${respuesta.status}`
+                );
+
+            error.tipo =
+                "HTTP";
+
+            error.status =
+                respuesta.status;
+
+            throw error;
 
         }
 
 
-        const datos =
-            await respuesta.json();
+        /* ----------------------------------------------------
+           PROCESAR JSON
+        ---------------------------------------------------- */
 
+        let datos;
+
+
+        try {
+
+            datos =
+                await respuesta.json();
+
+        }
+        catch (errorJSON) {
+
+            const error =
+                new Error(
+                    "La API devolvió una respuesta no válida."
+                );
+
+            error.tipo =
+                "JSON_INVALIDO";
+
+            throw error;
+
+        }
+
+
+        /* ----------------------------------------------------
+           VALIDAR RESPUESTA DE LA API
+        ---------------------------------------------------- */
 
         if (
             !datos ||
             datos.ok !== true
         ) {
 
-            throw new Error(
-                datos?.error ||
-                "La API devolvió una respuesta no válida."
-            );
+            const error =
+                new Error(
+                    datos?.error ||
+                    "La API rechazó la solicitud."
+                );
+
+            error.tipo =
+                "API";
+
+            throw error;
 
         }
 
@@ -533,19 +613,75 @@ async function consultarAPI(
     }
     catch (error) {
 
+        /* ----------------------------------------------------
+           TIMEOUT
+        ---------------------------------------------------- */
+
         if (
             error.name ===
             "AbortError"
         ) {
 
-            throw new Error(
-                "La consulta excedió el tiempo máximo de espera."
-            );
+            const errorTimeout =
+                new Error(
+                    "La consulta excedió el tiempo máximo de espera."
+                );
+
+            errorTimeout.tipo =
+                "TIMEOUT";
+
+            throw errorTimeout;
 
         }
 
 
-        throw error;
+        /* ----------------------------------------------------
+           ERROR YA CLASIFICADO
+        ---------------------------------------------------- */
+
+        if (
+            error.tipo
+        ) {
+
+            throw error;
+
+        }
+
+
+        /* ----------------------------------------------------
+           CONEXIÓN PERDIDA DURANTE FETCH
+        ---------------------------------------------------- */
+
+        if (
+            navigator.onLine === false
+        ) {
+
+            const errorOffline =
+                new Error(
+                    "Se perdió la conexión a Internet."
+                );
+
+            errorOffline.tipo =
+                "OFFLINE";
+
+            throw errorOffline;
+
+        }
+
+
+        /* ----------------------------------------------------
+           ERROR DE RED NO CLASIFICADO
+        ---------------------------------------------------- */
+
+        const errorRed =
+            new Error(
+                "No fue posible establecer comunicación con el servidor."
+            );
+
+        errorRed.tipo =
+            "RED";
+
+        throw errorRed;
 
     }
     finally {
@@ -558,6 +694,56 @@ async function consultarAPI(
 
 }
 
+/* ============================================================
+   7.1 MENSAJES DE ERROR DE API
+============================================================ */
+
+function obtenerMensajeErrorAPI(
+    error
+) {
+
+    switch (
+    error?.tipo
+    ) {
+
+        case "OFFLINE":
+
+            return "No hay conexión a Internet. Verifique su conexión e intente nuevamente.";
+
+
+        case "TIMEOUT":
+
+            return "La consulta está tardando más de lo esperado. Intente nuevamente.";
+
+
+        case "HTTP":
+
+            return "El servidor no pudo procesar correctamente la consulta.";
+
+
+        case "JSON_INVALIDO":
+
+            return "El servidor devolvió una respuesta no válida.";
+
+
+        case "API":
+
+            return error.message ||
+                "La API no pudo procesar la solicitud.";
+
+
+        case "RED":
+
+            return "No fue posible establecer comunicación con el servidor.";
+
+
+        default:
+
+            return "Ocurrió un error inesperado al consultar la información.";
+
+    }
+
+}
 
 /* ============================================================
    8. RESUMEN EJECUTIVO
@@ -765,7 +951,9 @@ async function cargarGestiones() {
 
 
         mostrarErrorGeneral(
-            "No fue posible consultar las gestiones comerciales. Intente nuevamente."
+            obtenerMensajeErrorAPI(
+                error
+            )
         );
 
     }
@@ -1234,10 +1422,8 @@ function actualizarPaginacion() {
 
 
     DOM.paginationStatus.textContent =
-        `Página ${
-            estadoDashboard.paginaActual
-        } de ${
-            estadoDashboard.totalPaginas
+        `Página ${estadoDashboard.paginaActual
+        } de ${estadoDashboard.totalPaginas
         }`;
 
 
@@ -1277,7 +1463,7 @@ function paginaSiguiente() {
     if (
         estadoDashboard.cargando ||
         estadoDashboard.paginaActual >=
-            estadoDashboard.totalPaginas
+        estadoDashboard.totalPaginas
     ) {
 
         return;
@@ -1424,7 +1610,9 @@ async function abrirDetalleGestion(
 
 
         DOM.modalError.textContent =
-            "No fue posible consultar el detalle de esta gestión.";
+            obtenerMensajeErrorAPI(
+                error
+            );
 
 
         DOM.modalError.hidden =
