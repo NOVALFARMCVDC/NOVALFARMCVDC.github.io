@@ -18,9 +18,70 @@ const CONFIG_GESTION = {
     FORM_DOS_URL:
         "https://docs.google.com/forms/d/e/1FAIpQLSfslXCZ4P6BpEDCyeAnUkyC4or_BuNBDYjfXypPxDuczKzPEA/formResponse",
 
-    MIN_SEARCH_LENGTH: 3
+    MIN_SEARCH_LENGTH: 3,
+
+    TIMEOUT_API: 15000
 
 };
+
+/* =========================================================
+   CLIENTE FETCH CON TIMEOUT
+========================================================= */
+
+async function fetchConTimeout(
+    url,
+    opciones = {}
+) {
+
+    const controlador =
+        new AbortController();
+
+    const timeout =
+        setTimeout(
+            () => {
+                controlador.abort();
+            },
+            CONFIG_GESTION.TIMEOUT_API
+        );
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    ...opciones,
+                    signal:
+                        controlador.signal
+                }
+            );
+
+        return response;
+
+    } catch (error) {
+
+        if (
+            error.name ===
+            "AbortError"
+        ) {
+
+            throw new Error(
+                "TIMEOUT_API"
+            );
+
+        }
+
+        throw error;
+
+    } finally {
+
+        clearTimeout(
+            timeout
+        );
+
+    }
+
+}
 
 /* =========================================================
 ESTADO GLOBAL DE LA GESTIÓN
@@ -451,7 +512,7 @@ async function buscarParticipantes(
         );
 
         const response =
-            await fetch(
+            await fetchConTimeout(
                 url.toString()
             );
 
@@ -690,7 +751,7 @@ async function seleccionarParticipante(
         );
 
         const response =
-            await fetch(
+            await fetchConTimeout(
                 url.toString()
             );
 
@@ -1323,7 +1384,7 @@ async function enviarGestionComercial(
 ) {
 
     const response =
-        await fetch(
+        await fetchConTimeout(
             CONFIG_GESTION.API_URL,
             {
                 method:
