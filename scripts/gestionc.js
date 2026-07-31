@@ -1662,6 +1662,9 @@ function registrarEventos() {
 
             event.preventDefault();
 
+            /*
+             * 1. Validar formulario.
+             */
             if (
                 !validarGestionComercial()
             ) {
@@ -1670,11 +1673,24 @@ function registrarEventos() {
 
             }
 
+            /*
+             * 2. Obtener información del participante
+             *    y de la gestión comercial.
+             */
+            const datos =
+                obtenerDatosGestion();
+
+            /*
+             * 3. Construir payload para CVDC2026_API.
+             */
             const payload =
                 construirPayloadAPI(
                     datos
                 );
 
+            /*
+             * 4. Cambiar interfaz a estado de envío.
+             */
             establecerEstadoEnvio(
                 "enviando"
             );
@@ -1685,11 +1701,17 @@ function registrarEventos() {
 
             try {
 
+                /*
+                 * 5. Enviar información al backend.
+                 */
                 const resultado =
                     await enviarGestionComercial(
                         payload
                     );
 
+                /*
+                 * 6. Registro nuevo.
+                 */
                 if (
                     resultado.estado ===
                     "gestion_registrada"
@@ -1701,7 +1723,12 @@ function registrarEventos() {
                         "success"
                     );
 
-                } else if (
+                }
+
+                /*
+                 * 7. REQUEST_ID previamente registrado.
+                 */
+                else if (
                     resultado.estado ===
                     "gestion_ya_registrada"
                 ) {
@@ -1712,7 +1739,12 @@ function registrarEventos() {
                         "success"
                     );
 
-                } else {
+                }
+
+                /*
+                 * 8. Respuesta inesperada.
+                 */
+                else {
 
                     throw new Error(
                         "Respuesta inesperada del servidor."
@@ -1720,13 +1752,17 @@ function registrarEventos() {
 
                 }
 
+                /*
+                 * 9. Bloquear formulario después
+                 *    de confirmación del servidor.
+                 */
                 finalizarGestion();
 
-            }
-            catch (error) {
+            } catch (error) {
 
                 console.error(
-                    "Error registrando gestión comercial."
+                    "Error registrando gestión comercial:",
+                    error
                 );
 
                 mostrarMensajeComercial(
@@ -1734,9 +1770,13 @@ function registrarEventos() {
                     "error"
                 );
 
-            }
-            finally {
+            } finally {
 
+                /*
+                 * Si finalizarGestion() mostró el botón
+                 * Nueva gestión, mantenemos bloqueado
+                 * Registrar gestión.
+                 */
                 if (
                     !newCommercialManagement.hidden
                 ) {
@@ -1746,6 +1786,10 @@ function registrarEventos() {
 
                 } else {
 
+                    /*
+                     * Si hubo error, restauramos
+                     * el botón para permitir reintento.
+                     */
                     establecerEstadoEnvio(
                         "normal"
                     );
@@ -1755,7 +1799,6 @@ function registrarEventos() {
             }
 
         }
-
     );
 
     /* -----------------------------------------------------
@@ -1785,14 +1828,6 @@ function inicializarGestionComercial() {
         return;
 
     }
-
-    const datos =
-        obtenerDatosGestion();
-
-    const payload =
-        construirPayloadAPI(
-            datos
-        );
 
     restablecerCamposCondicionales();
 
