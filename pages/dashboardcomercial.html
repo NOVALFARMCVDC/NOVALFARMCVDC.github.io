@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión Comercial | Novalfarm SAS | CVDC 2026</title>
+    <meta name="description"
+        content="Módulo de Gestión Comercial de Novalfarm SAS para el registro y seguimiento de participantes del CVDC 2026." />
+    <meta name="author" content="Novalfarm SAS" />
+    <meta property="og:title" content="Gestión Comercial | Novalfarm SAS | CVDC 2026" />
+    <meta property="og:description"
+        content="Módulo de gestión y seguimiento comercial de participantes del CVDC 2026." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="../assets/images/PreviewNovalfarm.webp" />
+    <link rel="icon" href="../assets/icons/FaviconNovalfarm.ico" type="image/ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="stylesheet" href="../styles/dashboardcomercial.css" />
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="site-header">
+
+        <div class="header-container">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="NOVALFARM - Inicio"
+            >
+
+                <span class="brand-name">
+                    NOVALFARM
+                </span>
+
+                <span class="brand-event">
+                    CVDC 2026
+                </span>
+
+            </a>
+
+
+            <div class="header-context">
+
+                <span class="header-context-label">
+                    Panel Ejecutivo
+                </span>
+
+                <span class="header-context-area">
+                    Gestión Comercial
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =================================================
+             PRESENTACIÓN
+        ================================================== -->
+
+        <section
+            class="dashboard-intro"
+            aria-labelledby="dashboard-title"
+        >
+
+            <div class="dashboard-container">
+
+                <div class="dashboard-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            CVDC 2026
+                        </span>
+
+                        <h1 id="dashboard-title">
+                            Panel de Gestión Comercial
+                        </h1>
+
+                        <p class="dashboard-description">
+                            Seguimiento ejecutivo de las gestiones
+                            comerciales registradas durante el evento.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="dashboard-status"
+                        aria-live="polite"
+                    >
+
+                        <span
+                            class="status-indicator"
+                            aria-hidden="true"
+                        ></span>
+
+                        <div>
+
+                            <span class="status-label">
+                                Información
+                            </span>
+
+                            <strong id="last-update">
+                                Preparando consulta...
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             INDICADORES EJECUTIVOS
+        ================================================== -->
+
+        <section
+            class="metrics-section"
+            aria-labelledby="metrics-title"
+        >
+
+            <div class="dashboard-container">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Resumen ejecutivo
+                        </span>
+
+                        <h2 id="metrics-title">
+                            Indicadores comerciales
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="metrics-grid">
+
+
+                    <!-- TOTAL GESTIONES -->
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Gestiones registradas
+                        </span>
+
+                        <strong
+                            class="metric-value"
+                            id="metric-total"
+                        >
+                            —
+                        </strong>
+
+                        <span class="metric-description">
+                            Registros comerciales válidos
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- INTERÉS ALTO -->
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Interés alto
+                        </span>
+
+                        <strong
+                            class="metric-value"
+                            id="metric-interest"
+                        >
+                            —
+                        </strong>
+
+                        <span class="metric-description">
+                            Oportunidades con interés alto
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- POTENCIAL ALTO -->
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Potencial alto
+                        </span>
+
+                        <strong
+                            class="metric-value"
+                            id="metric-potential"
+                        >
+                            —
+                        </strong>
+
+                        <span class="metric-description">
+                            Prospectos con alto potencial
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- VISITA -->
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Solicitan visita
+                        </span>
+
+                        <strong
+                            class="metric-value"
+                            id="metric-visits"
+                        >
+                            —
+                        </strong>
+
+                        <span class="metric-description">
+                            Requieren gestión presencial
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- MUESTRAS -->
+
+                    <article class="metric-card">
+
+                        <span class="metric-label">
+                            Muestras entregadas
+                        </span>
+
+                        <strong
+                            class="metric-value"
+                            id="metric-samples"
+                        >
+                            —
+                        </strong>
+
+                        <span class="metric-description">
+                            Gestiones con entrega de muestra
+                        </span>
+
+                    </article>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BÚSQUEDA Y FILTROS
+        ================================================== -->
+
+        <section
+            class="filters-section"
+            aria-labelledby="filters-title"
+        >
+
+            <div class="dashboard-container">
+
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Consulta
+                        </span>
+
+                        <h2 id="filters-title">
+                            Buscar y filtrar gestiones
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="clear-filters"
+                        class="button-secondary"
+                    >
+                        Limpiar filtros
+                    </button>
+
+                </div>
+
+
+
+                <form
+                    id="dashboard-filters"
+                    class="filters-form"
+                    novalidate
+                >
+
+
+                    <!-- BUSCADOR -->
+
+                    <div class="filter-group filter-search">
+
+                        <label for="filter-search">
+                            Buscar
+                        </label>
+
+                        <input
+                            type="search"
+                            id="filter-search"
+                            name="buscar"
+                            placeholder="Nombre, empresa, ID..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+
+                    <!-- NIVEL -->
+
+                    <div class="filter-group">
+
+                        <label for="filter-level">
+                            Nivel de interés
+                        </label>
+
+                        <select
+                            id="filter-level"
+                            name="nivel"
+                        >
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            <option value="Alto">
+                                Alto
+                            </option>
+
+                            <option value="Medio">
+                                Medio
+                            </option>
+
+                            <option value="Bajo">
+                                Bajo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- POTENCIAL -->
+
+                    <div class="filter-group">
+
+                        <label for="filter-potential">
+                            Potencial de compra
+                        </label>
+
+                        <select
+                            id="filter-potential"
+                            name="potencial"
+                        >
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            <option value="Alto">
+                                Alto
+                            </option>
+
+                            <option value="Medio">
+                                Medio
+                            </option>
+
+                            <option value="Bajo">
+                                Bajo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- VISITA -->
+
+                    <div class="filter-group">
+
+                        <label for="filter-visit">
+                            Solicita visita
+                        </label>
+
+                        <select
+                            id="filter-visit"
+                            name="visita"
+                        >
+
+                            <option value="">
+                                Todas
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- LÍNEA -->
+
+                    <div class="filter-group">
+
+                        <label for="filter-line">
+                            Línea de interés
+                        </label>
+
+                        <input
+                            type="text"
+                            id="filter-line"
+                            name="linea"
+                            placeholder="Ej. Dermatológica"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+
+                    <div class="filter-actions">
+
+                        <button
+                            type="submit"
+                            class="button-primary"
+                            id="apply-filters"
+                        >
+                            Aplicar filtros
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             GESTIONES COMERCIALES
+        ================================================== -->
+
+        <section
+            class="management-section"
+            aria-labelledby="management-title"
+        >
+
+            <div class="dashboard-container">
+
+
+                <div class="section-heading management-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Seguimiento
+                        </span>
+
+                        <h2 id="management-title">
+                            Gestiones comerciales
+                        </h2>
+
+                    </div>
+
+
+                    <div class="results-summary">
+
+                        <strong id="results-count">
+                            0
+                        </strong>
+
+                        <span>
+                            resultados
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ESTADO DE CARGA -->
+
+                <div
+                    id="dashboard-loading"
+                    class="dashboard-message"
+                    role="status"
+                    aria-live="polite"
+                >
+                    Consultando información comercial...
+                </div>
+
+
+
+                <!-- ERROR -->
+
+                <div
+                    id="dashboard-error"
+                    class="dashboard-message dashboard-message-error"
+                    role="alert"
+                    hidden
+                >
+                    No fue posible consultar la información.
+                </div>
+
+
+
+                <!-- SIN RESULTADOS -->
+
+                <div
+                    id="dashboard-empty"
+                    class="dashboard-message"
+                    hidden
+                >
+
+                    No se encontraron gestiones que coincidan
+                    con los criterios seleccionados.
+
+                </div>
+
+
+
+                <!-- TABLA -->
+
+                <div
+                    id="management-table-wrapper"
+                    class="table-wrapper"
+                    hidden
+                >
+
+                    <table class="management-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th scope="col">
+                                    Participante
+                                </th>
+
+                                <th scope="col">
+                                    Empresa
+                                </th>
+
+                                <th scope="col">
+                                    Línea
+                                </th>
+
+                                <th scope="col">
+                                    Interés
+                                </th>
+
+                                <th scope="col">
+                                    Potencial
+                                </th>
+
+                                <th scope="col">
+                                    Visita
+                                </th>
+
+                                <th scope="col">
+                                    Comercial
+                                </th>
+
+                                <th scope="col">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="management-table-body">
+
+                            <!--
+                                dashboardc.js insertará
+                                las gestiones aquí.
+                            -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- PAGINACIÓN -->
+
+                <nav
+                    id="dashboard-pagination"
+                    class="pagination"
+                    aria-label="Paginación de gestiones"
+                    hidden
+                >
+
+                    <button
+                        type="button"
+                        id="previous-page"
+                        class="pagination-button"
+                    >
+                        Anterior
+                    </button>
+
+
+                    <span
+                        id="pagination-status"
+                        class="pagination-status"
+                        aria-live="polite"
+                    >
+                        Página 1 de 1
+                    </span>
+
+
+                    <button
+                        type="button"
+                        id="next-page"
+                        class="pagination-button"
+                    >
+                        Siguiente
+                    </button>
+
+                </nav>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         MODAL DETALLE DE GESTIÓN
+    ====================================================== -->
+
+    <div
+        id="management-modal"
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        hidden
+    >
+
+        <div
+            class="modal-backdrop"
+            data-close-modal
+        ></div>
+
+
+        <div class="modal-dialog">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        Detalle comercial
+                    </span>
+
+                    <h2 id="modal-title">
+                        Gestión comercial
+                    </h2>
+
+                    <span id="modal-management-id">
+                        —
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="close-modal"
+                    class="modal-close"
+                    aria-label="Cerrar detalle"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <div
+                id="modal-loading"
+                class="dashboard-message"
+                role="status"
+            >
+                Consultando detalle...
+            </div>
+
+
+            <div
+                id="modal-error"
+                class="dashboard-message dashboard-message-error"
+                role="alert"
+                hidden
+            >
+                No fue posible consultar esta gestión.
+            </div>
+
+
+            <div
+                id="modal-content"
+                class="modal-content"
+                hidden
+            >
+
+                <!--
+                    dashboardc.js construirá aquí
+                    el detalle de la gestión.
+                -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="dashboard-container footer-container">
+
+            <div>
+
+                <strong>
+                    NOVALFARM SAS
+                </strong>
+
+                <p>
+                    Panel de Gestión Comercial · CVDC 2026
+                </p>
+
+            </div>
+
+
+            <div class="footer-note">
+
+                Uso interno · Información comercial
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="../scripts/dashboardc.js" defer></script>
+
+</body>
+
+</html>
