@@ -19,6 +19,9 @@ const grupoQuienesOtro =
 const quienesOtroInput =
     document.getElementById("quienesb");
 
+const TIMEOUT_FORM_UNO =
+    15000;
+
 
 /* ======================================================
 ENVIO FORM CON TIMEOUT
@@ -162,8 +165,6 @@ if (form) {
             const formURL =
                 "https://docs.google.com/forms/d/e/1FAIpQLSfTsuP86TGgXtvGI1_HN9LwRnlbXPwGm_fjJj-lT1Gh7DT5MA/formResponse";
 
-            const TIMEOUT_FORM_UNO = 15000;
-
             /* =============================================
                FORM DATA
             ============================================== */
@@ -220,14 +221,14 @@ if (form) {
                     "TIMEOUT_FORM_UNO"
                 ) {
 
-                    mostrarMensaje(
+                    showMessage(
                         "No fue posible confirmar el envío dentro del tiempo esperado. Verifique su conexión e intente nuevamente.",
                         "error"
                     );
 
                 } else {
 
-                    mostrarMensaje(
+                    showMessage(
                         "No fue posible enviar la información. Verifique su conexión e intente nuevamente.",
                         "error"
                     );
@@ -235,6 +236,7 @@ if (form) {
                 }
 
             }
+
 
             /* =============================================
                RESTAURAR BOTÓN
