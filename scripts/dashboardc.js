@@ -1,23 +1,9 @@
 "use strict";
 
-
 /* ============================================================
-   NOVALFARM SAS
    CVDC 2026
-   DASHBOARD COMERCIAL
-
-   Archivo:
-   dashboardc.js
-
-   Responsabilidades:
-   - Consultar resumen ejecutivo.
-   - Consultar gestiones comerciales.
-   - Aplicar filtros.
-   - Gestionar paginación.
-   - Consultar detalle individual.
-   - Construir tabla.
-   - Construir modal.
-   - Controlar estados de carga y error.
+   NOVALFARM SAS
+   Versión frontend: 1.0.0
 ============================================================ */
 
 
