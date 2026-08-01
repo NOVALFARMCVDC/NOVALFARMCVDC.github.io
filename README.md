@@ -1,879 +1,552 @@
-# NOVALFARM SAS — REGISTRO CVDC 2026
+# CVDC 2026 - NOVALFARM SAS
 
-## Estado del proyecto
+## Descripción
 
-**Proyecto:** Landing Page de Registro — CVDC 2026  
-**Empresa:** Novalfarm SAS  
-**Año:** 2026  
-**Estado actual:** Desarrollo funcional / preparación para despliegue final  
-**Versión de referencia:** Julio de 2026
+Sistema web desarrollado para el registro, gestión comercial y consulta ejecutiva de los visitantes del stand de NOVALFARM SAS durante el Congreso Veterinario CVDC 2026.
 
----
+El proyecto fue desarrollado como una solución ligera, rápida y altamente disponible utilizando tecnologías web estáticas y los servicios de Google Workspace.
 
-# 1. DESCRIPCIÓN DEL PROYECTO
-
-Este proyecto corresponde a una Landing Page desarrollada para la participación
-de Novalfarm SAS en el CVDC 2026.
-
-Su objetivo principal es permitir el registro de asistentes y visitantes mediante
-un formulario web integrado con Google Forms, manteniendo la identidad gráfica
-definida para la campaña y los lineamientos visuales corporativos de Novalfarm SAS.
-
-La página incluye:
-
-- Header corporativo.
-- Hero gráfico de campaña CVDC 2026.
-- Información de contacto.
-- Formulario de registro.
-- Integración del formulario con Google Forms.
-- Campo condicional según el perfil del visitante.
-- Autorización para tratamiento de datos personales.
-- Mapa de ubicación.
-- Call To Action (CTA).
-- Footer corporativo.
-- Diseño responsive.
-- Menú móvil accesible.
-- Validaciones de formulario mediante JavaScript.
+El sistema fue diseñado para operar durante el evento con múltiples usuarios trabajando simultáneamente desde computadores, tablets y teléfonos móviles.
 
 ---
 
-# 2. TECNOLOGÍAS UTILIZADAS
+# Objetivos del proyecto
 
-El proyecto está desarrollado utilizando:
+El sistema permite cubrir completamente el flujo comercial del evento:
+
+1. Registro inicial del visitante.
+2. Consulta inteligente del visitante registrado.
+3. Registro de la gestión comercial realizada.
+4. Consulta ejecutiva de resultados en tiempo real.
+
+---
+
+# Arquitectura General
+
+Visitante
+
+↓
+
+Landing Page (index.html)
+
+↓
+
+FORM_UNO (Google Forms)
+
+↓
+
+Google Sheets A
+
+↓
+
+Apps Script API
+
+↓
+
+Gestión Comercial (gestioncomercial.html)
+
+↓
+
+FORM_DOS
+
+↓
+
+Google Sheets B
+
+↓
+
+Dashboard Comercial
+
+↓
+
+Dirección Comercial / CEO
+
+---
+
+# Tecnologías utilizadas
+
+Frontend
 
 - HTML5
 - CSS3
-- JavaScript Vanilla
-- Google Forms como receptor de registros
-- Google Maps Embed
-- Google Fonts
-- Montserrat
-- Font Awesome 6.5.1
+- JavaScript ES6
 
-No se utilizan frameworks JavaScript ni frameworks CSS.
+Servicios
 
----
+- GitHub Pages
+- Google Forms
+- Google Sheets
+- Google Apps Script
 
-# 3. ESTRUCTURA GENERAL DEL PROYECTO
+APIs
 
-La estructura debe mantenerse organizada de forma similar a:
+- Fetch API
+- AbortController
+- FormData
 
-project/
-│
-├── index.html
-├── index.css
-│
-├── assets/
-│   ├── icons/
-│   │   ├── FaviconNovalfarm.ico
-│   │   └── LogoNegativoNovalfarmB.svg
-│   │
-│   └── images/
-│       ├── Header.png
-│       ├── Body.webp
-│       ├── Footer.webp
-│       └── PreviewNovalfarm.webp
-│
-├── styles/
-│   └── styles.css
-│
-├── scripts/
-│   ├── scripts.js
-│   └── contacto.js
-│
-└── README.md
+Control de versiones
 
-IMPORTANTE:
-
-Antes de modificar rutas, verificar la ubicación real de index.html/index.css
-en el servidor, ya que actualmente existen referencias relativas mediante
-"./" y "../".
+- Git
+- GitHub
 
 ---
 
-# 4. IDENTIDAD VISUAL
+# Estructura del proyecto
 
-## Paleta oficial utilizada
+/assets
 
-### Color principal — Azul Noval
+/css
 
-#312783
+/styles.css
 
-Variable CSS:
+/index.css
 
---color-primary: #312783;
+/gestioncomercial.css
 
-### Color secundario — Morado Mintrel Force
+/dashboardcomercial.css
 
-#5F5692
+/js
 
-Variable CSS:
+/scripts.js
 
---color-secondary: #5F5692;
+/contacto.js
 
-### Color terciario — Rosado Mintrel Force
+/gestionc.js
 
-#F1C5DC
+/dashboardc.js
 
-Variable CSS:
+/pages
 
---color-accent: #F1C5DC;
+/index.html
 
----
+/gestioncomercial.html
 
-# 5. TIPOGRAFÍA
-
-La tipografía definida para todo el proyecto es:
-
-Montserrat
-
-Se carga desde Google Fonts.
-
-Pesos utilizados:
-
-- 400 — texto regular.
-- 500 — textos intermedios.
-- 600 — elementos destacados.
-- 700 — títulos.
-
-Lineamiento principal:
-
-Títulos:
-font-weight: 700;
-
-Cuerpo de texto:
-font-weight: 400;
-
-No reemplazar Montserrat sin autorización del responsable del proyecto.
+/dashboardcomercial.html
 
 ---
 
-# 6. ARCHIVOS PRINCIPALES
+# Flujo del sistema
 
-## index.html
+## 1 Registro del visitante
 
-Contiene la estructura principal de la Landing Page.
+Página:
 
-Incluye:
+index.html
 
-- Header
-- Navegación
-- Hero
-- Información de contacto
-- Formulario
-- Autorización de datos
-- Mapa
-- CTA
-- Footer
+Script:
 
-También contiene los identificadores (`id`) y los nombres (`name`) utilizados
-por JavaScript y Google Forms.
+contacto.js
 
-IMPORTANTE:
+Destino:
 
-No modificar los atributos `name="entry.xxxxx"` del formulario sin verificar
-previamente los identificadores correspondientes en Google Forms.
+Google Forms (FORM_UNO)
+
+Base de datos:
+
+Google Sheets A
+
+Resultado:
+
+Generación automática del ID único del participante.
 
 ---
 
-## styles/styles.css
+## 2 Gestión Comercial
 
-Contiene los estilos globales del proyecto.
+Página:
 
-Responsable de:
+gestioncomercial.html
 
-- Variables CSS.
-- Paleta corporativa.
-- Reset.
-- Tipografía.
-- Botones.
-- Header.
-- Navegación.
-- Menú móvil.
-- Footer.
-- Responsive global.
-- Scrollbar.
-- Estados generales.
+Script:
 
----
+gestionc.js
 
-## index.css
+Consulta:
 
-Contiene los estilos específicos de la Landing Page CVDC 2026.
+CVDC2026_API
 
-Responsable de:
+Base:
 
-- Hero.
-- Sección de registro.
-- Información de contacto.
-- Formulario.
-- Tratamiento de datos.
-- Mapa.
-- CTA.
-- Responsive específico.
+Google Sheets A
+
+Registro:
+
+Google Sheets B
+
+Resultado:
+
+Registro de la gestión comercial asociada al participante.
 
 ---
 
-## scripts/scripts.js
+## 3 Dashboard Comercial
 
-Contiene funcionalidades generales de interfaz.
+Página:
 
-Actualmente administra:
+dashboardcomercial.html
 
-- Menú hamburguesa móvil.
-- Apertura y cierre del menú.
-- Estado ARIA del menú.
-- Cierre al seleccionar una opción.
-- Cierre al hacer clic fuera.
-- Cierre mediante tecla ESC.
-- Retorno del foco al botón.
-- Efecto visual del header durante scroll.
+Script:
 
----
+dashboardc.js
 
-## scripts/contacto.js
+Consulta:
 
-Contiene toda la lógica relacionada con el formulario.
+CVDC2026_API
 
-Actualmente administra:
+Resultado:
 
-- Prevención del submit tradicional.
-- Validación de campos.
-- Validación de correo electrónico.
-- Validación del consentimiento.
-- Validaciones en tiempo real.
-- Campo condicional "Otro".
-- Estados visuales de validación.
-- Estado de carga del botón.
-- Construcción de FormData.
-- Envío hacia Google Forms.
-- Reset posterior al registro.
-- Mensajes de éxito/error.
+Indicadores ejecutivos en tiempo real.
 
 ---
 
-# 7. FORMULARIO DE REGISTRO
+# API
 
-Actualmente se recopilan los siguientes datos:
+Servicio
 
-1. Nombre completo.
-2. Número de contacto.
-3. Correo electrónico.
-4. Ciudad de origen.
-5. Dirección.
-6. Rango de edad.
-7. Género.
-8. Quién es usted.
-9. Profesión u ocupación, cuando se selecciona "Otro".
-10. Empresa / Clínica / Universidad.
-11. Autorización para tratamiento de datos personales.
+CVDC2026_API
 
----
+Funciones implementadas
 
-# 8. INTEGRACIÓN CON GOOGLE FORMS
+estado
 
-El formulario HTML NO utiliza un backend propio.
+buscar
 
-Los datos son enviados mediante JavaScript hacia Google Forms.
+participante
 
-La URL utilizada se encuentra en:
+registrargestion
 
-scripts/contacto.js
+resumengestiones
 
-Variable:
+gestiones
 
-const formURL = ".../formResponse";
-
-Cada campo HTML utiliza un identificador de Google Forms mediante:
-
-name="entry.XXXXXXXX"
-
-IMPORTANTE:
-
-No modificar:
-
-- URL formResponse.
-- entry IDs.
-- valores de las opciones.
-
-sin comprobar posteriormente que Google Forms recibe correctamente los datos.
-
-Cualquier modificación estructural del Google Form puede cambiar los entry IDs.
-
-Después de modificar Google Forms se debe ejecutar nuevamente una prueba
-End-to-End.
+gestion
 
 ---
 
-# 9. CAMPO CONDICIONAL "OTRO"
+# Funcionalidades implementadas
 
-El campo:
+## Landing
 
-"Si seleccionó 'Otro', por favor especifique."
+✔ Registro del visitante
 
-depende de:
+✔ Validaciones
 
-"Quién es usted"
+✔ Responsive
 
-Su comportamiento esperado es:
-
-Médico veterinario
-→ Campo oculto.
-
-Estudiante
-→ Campo oculto.
-
-Propietario de Clínica
-→ Campo oculto.
-
-Groomer
-→ Campo oculto.
-
-Otro
-→ Campo visible y obligatorio.
-
-HTML involucrado:
-
-#quienes
-#grupoQuienesOtro
-#quienesb
-
-JavaScript involucrado:
-
-actualizarCampoOtro()
-
-IMPORTANTE:
-
-El CSS debe respetar el atributo HTML `hidden`.
-
-Mantener:
-
-.form-group[hidden] {
-    display: none;
-}
-
-No eliminar esta regla, ya que `.form-group` utiliza `display: flex` y podría
-hacer visible nuevamente el campo condicional.
+✔ Integración Google Forms
 
 ---
 
-# 10. PRIVACIDAD Y TRATAMIENTO DE DATOS
+## Gestión Comercial
 
-Se incorporó autorización explícita para tratamiento de datos personales.
+✔ Búsqueda inteligente
 
-El usuario debe marcar el checkbox antes de realizar el registro.
+✔ Autocompletado
 
-El checkbox:
+✔ Recuperación del participante
 
-- Es obligatorio.
-- Es validado mediante JavaScript.
-- Está asociado a Google Forms.
-- Se reinicia después de un registro exitoso.
+✔ Registro comercial
 
-También existe un enlace hacia la Política de Tratamiento de Datos Personales
-de Novalfarm SAS.
+✔ Idempotencia
 
-Los enlaces externos abiertos mediante `target="_blank"` deben conservar:
+✔ Control de duplicados
 
-rel="noopener noreferrer"
-
-No eliminar esta protección.
+✔ Trazabilidad
 
 ---
 
-# 11. VALIDACIONES
+## Dashboard
 
-El formulario implementa validaciones HTML5 y JavaScript.
+✔ Resumen Ejecutivo
 
-Se validan:
+✔ Indicadores
 
-- Campos obligatorios.
-- Campos vacíos.
-- Correo electrónico.
-- Selects.
-- Checkbox de privacidad.
-- Campo "Otro" cuando corresponde.
+✔ Buscador
 
-Los estados visuales utilizan:
+✔ Filtros
 
-Verde:
-#22C55E
+✔ Paginación
 
-Rojo:
-#EF4444
+✔ Modal de detalle
 
-No depender exclusivamente del color para futuras mejoras de accesibilidad.
+✔ Actualización automática
 
 ---
 
-# 12. ACCESIBILIDAD
+# Seguridad implementada
 
-Se realizaron mejoras de accesibilidad.
+✔ Validación Frontend
 
-## Menú móvil
+✔ Validación Backend
 
-El menú hamburguesa utiliza un elemento:
+✔ Timeout de API
 
-<button>
+✔ AbortController
 
-y no un `<div>`.
+✔ Prevención de doble envío
 
-Implementa:
+✔ Prevención de doble clic
 
-aria-label
-aria-controls
-aria-expanded
+✔ RequestID
 
-El icono utiliza:
+✔ ID Gestión
 
-aria-hidden="true"
+✔ Recuperación automática
 
-El menú también puede cerrarse mediante:
+✔ Protección frente a suspensión
 
-ESC
+✔ Versionado de recursos
 
-Al cerrarlo mediante ESC, el foco vuelve al botón hamburguesa.
+✔ Manejo de errores
 
-## Mensajes del formulario
+✔ Estados de carga
 
-El contenedor de mensajes utiliza:
-
-role="status"
-aria-live="polite"
-
-## Hero
-
-El hero debe conservar correctamente:
-
-aria-label="Campaña Novalfarm CVDC 2026"
-
-como atributo del elemento `<section>`.
+✔ Recuperación de conexión
 
 ---
 
-# 13. SEGURIDAD
+# Arquitectura de Datos
 
-Se realizaron las siguientes mejoras:
+Google Sheets A
 
-- Eliminación de información personal innecesaria de comentarios JavaScript.
-- Uso de HTTPS donde los recursos lo permiten.
-- Uso de `rel="noopener noreferrer"` en enlaces externos con `target="_blank"`.
-- Eliminación de código obsoleto.
-- Protección de ejecución JavaScript verificando existencia de elementos.
-- Validación previa al envío del formulario.
-- Uso de `type="button"` en el botón hamburguesa.
+Registro del visitante.
 
-IMPORTANTE:
+Google Sheets B
 
-Nunca incluir en comentarios del código:
+Registro de la gestión comercial.
 
-- Números de identificación personal.
-- Contraseñas.
-- Tokens.
-- Credenciales.
-- Claves API privadas.
-- Información confidencial.
+Las hojas trabajan mediante Apps Script como API REST.
+
+El Frontend nunca consulta directamente Google Sheets.
 
 ---
 
-# 14. RESPONSIVE DESIGN
+# Dashboard
 
-El proyecto contempla:
+Permite consultar:
+
+Número de gestiones.
+
+Interés comercial.
+
+Potencial de compra.
+
+Solicitudes de visita.
+
+Entrega de muestras.
+
+Filtros por:
+
+- búsqueda
+- nivel
+- potencial
+- visita
+- línea de interés
+
+Detalle completo por gestión.
+
+---
+
+# Compatibilidad
 
 Desktop
-> 1200 px
 
-Laptop
-<= 1200 px
+✔ Windows
+
+✔ macOS
 
 Tablet
-<= 992 px
 
-Mobile
-<= 768 px
+✔ Android
 
-Small Mobile
-<= 480 px
+✔ iPadOS
 
-Antes de publicar cualquier nueva versión deben probarse como mínimo:
+Móvil
 
-1920x1080
-1366x768
-1024x768
-768px
-480px
-390px
-360px
+✔ Android
 
-También probar orientación vertical y horizontal cuando corresponda.
+✔ iPhone
 
----
+Navegadores
 
-# 15. MENÚ MÓVIL
+✔ Chrome
 
-El menú hamburguesa aparece por debajo de:
+✔ Edge
 
-992px
+✔ Firefox
 
-Comportamientos implementados:
-
-- Abrir mediante clic/tap.
-- Cerrar mediante botón.
-- Cerrar seleccionando enlace.
-- Cerrar haciendo clic fuera.
-- Cerrar mediante ESC.
-- Actualizar `aria-expanded`.
-- Actualizar `aria-label`.
-
-No eliminar esta lógica al modificar scripts.js.
+✔ Safari
 
 ---
 
-# 16. ASSETS PRINCIPALES
+# Rendimiento
 
-## Header.png
+Arquitectura validada para:
 
-Imagen principal de campaña CVDC 2026 utilizada en el Hero.
+Hasta aproximadamente 1500 registros durante el evento.
 
-## Body.webp
+Consultas concurrentes desde múltiples dispositivos.
 
-Imagen utilizada como fondo visual en el CTA.
+Operación sincronizada entre:
 
-## Footer.webp
+Visitantes
 
-Imagen utilizada como fondo del footer.
+↓
 
-## PreviewNovalfarm.webp
+Comerciales
 
-Imagen preparada para Open Graph / vista previa al compartir la página.
+↓
 
-## LogoNegativoNovalfarmB.svg
+Dirección Comercial
 
-Logo utilizado en el header.
+↓
 
----
-
-# 17. SEO Y OPEN GRAPH
-
-Actualmente están configurados:
-
-<title>
-<meta name="description">
-<meta name="author">
-og:title
-og:description
-og:type
-og:image
-
-La información corresponde al evento CVDC 2026.
-
-Antes del despliegue público se recomienda verificar que `og:image` utilice
-una URL absoluta del dominio de producción para garantizar compatibilidad
-con plataformas externas.
+CEO
 
 ---
 
-# 18. CONTACTO CORPORATIVO
+# Versionado
 
-El footer contiene enlaces funcionales mediante:
+Versión actual
 
-mailto:
-tel:
-https:
+Frontend 1.0.0
 
-No reemplazar nuevamente estos enlaces por texto plano.
+Backend 1.0.0
 
-La información oficial debe validarse con Novalfarm SAS antes de modificarla.
+API 1.0.0
 
----
+Los archivos CSS y JavaScript utilizan versionado mediante Query String.
 
-# 19. GOOGLE MAPS
+Ejemplo
 
-La sección "Nuestra Ubicación" utiliza Google Maps mediante iframe.
+dashboardc.js?v=1.0.0
 
-El iframe implementa:
-
-loading="lazy"
-allowfullscreen
-referrerpolicy
-title
-
-Si se modifica la dirección corporativa, también debe actualizarse la URL
-del mapa.
+Cuando exista una actualización publicada deberá incrementarse la versión correspondiente.
 
 ---
 
-# 20. ESTADO ACTUAL DE LIMPIEZA
+# Despliegue
 
-Se han trabajado los siguientes puntos:
+Repositorio
 
-[x] Paleta corporativa actualizada.
-[x] Montserrat aplicada globalmente.
-[x] Títulos configurados en Bold.
-[x] Texto general configurado en Regular.
-[x] Limpieza de comentarios sensibles.
-[x] Formulario integrado con Google Forms.
-[x] Validaciones JavaScript.
-[x] Campo "Otro" condicional.
-[x] Checkbox de tratamiento de datos.
-[x] Consentimiento registrado en Google Forms.
-[x] Enlaces mailto.
-[x] Enlaces tel.
-[x] HTTPS en política de datos.
-[x] noopener noreferrer.
-[x] Menú hamburguesa convertido a button.
-[x] ARIA implementado en menú móvil.
-[x] Cierre mediante ESC.
-[x] Protección de ejecución del header.
-[x] Limpieza de código obsoleto revisada.
-[x] Open Graph actualizado para CVDC 2026.
-[x] Diseño responsive.
-[x] Footer responsive.
-[x] CTA actualizado.
-[x] Identidad gráfica CVDC aplicada.
+GitHub
+
+Hosting
+
+GitHub Pages
+
+Base de datos
+
+Google Sheets
+
+API
+
+Google Apps Script
 
 ---
 
-# 21. CORRECCIONES RECIENTES IMPORTANTES
+# Estado del Proyecto
 
-## Campo "Otro"
+Estado actual
 
-Se detectó que `.form-group` utilizaba:
+PRODUCCIÓN
 
-display: flex;
+Proyecto certificado funcionalmente.
 
-lo que podía interferir con el atributo:
-
-hidden
-
-La solución implementada es:
-
-.form-group[hidden] {
-    display: none;
-}
-
-Esta regla debe conservarse.
-
-## Hero ARIA
-
-La estructura correcta debe ser:
-
-<section
-    class="contact-hero"
-    aria-label="Campaña Novalfarm CVDC 2026">
-</section>
-
-No colocar `aria-label` como texto dentro de la sección.
-
-## Limpieza contacto.js
-
-No declarar variables individuales de campos cuando no sean utilizadas.
-
-El envío actualmente puede obtener los datos directamente mediante:
-
-const formData = new FormData(form);
+Todas las pruebas de integración fueron ejecutadas satisfactoriamente.
 
 ---
 
-# 22. PENDIENTES ANTES DE PRODUCCIÓN
+# Pruebas realizadas
 
-Antes de considerar el proyecto 100 % cerrado se debe realizar la fase final
-de pruebas.
+Se certificaron:
 
-## Prueba funcional End-to-End
+Registro del visitante.
 
-Realizar registros reales y comprobar directamente en Google Forms:
+Registro comercial.
 
-[ ] Nombre recibido correctamente.
-[ ] Teléfono recibido correctamente.
-[ ] Correo recibido correctamente.
-[ ] Ciudad recibida correctamente.
-[ ] Dirección recibida correctamente.
-[ ] Edad recibida correctamente.
-[ ] Género recibido correctamente.
-[ ] Perfil recibido correctamente.
-[ ] Campo "Otro" recibido correctamente cuando corresponda.
-[ ] Empresa recibida correctamente.
-[ ] Consentimiento recibido correctamente.
+Dashboard.
 
-Realizar como mínimo:
+API.
 
-Caso 1:
-Registro utilizando "Médico veterinario".
+Responsive.
 
-Caso 2:
-Registro utilizando "Otro" y completando profesión/ocupación.
+Desktop.
 
-Caso 3:
-Intento de registro sin aceptar tratamiento de datos.
+Tablet.
 
-Caso 4:
-Intento de registro con correo inválido.
+Móvil.
 
-Caso 5:
-Intento de registro dejando campos obligatorios vacíos.
+Timeout.
 
----
+Offline.
 
-# 23. PRUEBAS DE DESPLIEGUE
+Recuperación.
 
-Después de subir el proyecto al servidor realizar nuevamente todas las pruebas.
+Versionado.
 
-NO considerar suficientes las pruebas realizadas mediante localhost.
+Estados de carga.
 
-Verificar en producción:
+Protección frente a suspensión.
 
-[ ] Carga de CSS.
-[ ] Carga de JavaScript.
-[ ] Carga del Header.
-[ ] Carga de Body.webp.
-[ ] Carga de Footer.webp.
-[ ] Carga del logo.
-[ ] Carga del favicon.
-[ ] Google Fonts.
-[ ] Font Awesome.
-[ ] Google Maps.
-[ ] Formulario.
-[ ] Google Forms.
-[ ] Política de datos.
-[ ] Enlaces de correo.
-[ ] Enlaces telefónicos.
-[ ] Menú móvil.
-[ ] Campo condicional "Otro".
-[ ] Consentimiento.
-[ ] HTTPS.
-[ ] Consola del navegador sin errores críticos.
-[ ] Desktop.
-[ ] Tablet.
-[ ] Mobile.
+Prevención de duplicados.
+
+Prevención de doble envío.
+
+Recuperación automática.
+
+Consultas concurrentes.
+
+Paginación.
+
+Filtros.
+
+Modal.
+
+Integración completa.
 
 ---
 
-# 24. IMPORTANTE SOBRE FETCH Y GOOGLE FORMS
+# Mantenimiento
 
-El envío utiliza:
+Para futuras modificaciones:
 
-fetch()
+1.
 
-con:
+Actualizar la versión del recurso.
 
-mode: "no-cors"
+Ejemplo
 
-Debido al funcionamiento de `no-cors`, el navegador no permite inspeccionar
-normalmente la respuesta de Google Forms.
+dashboardc.js?v=1.0.1
 
-Por esta razón, que `fetch()` termine sin lanzar una excepción NO constituye
-por sí solo confirmación absoluta de que Google Forms almacenó correctamente
-todos los campos.
+2.
 
-La validación definitiva debe realizarse comprobando las respuestas directamente
-en Google Forms o en la hoja de respuestas asociada.
+Actualizar README.
 
-Esto es especialmente importante después de modificar preguntas o `entry IDs`.
+3.
 
----
+Realizar pruebas de integración.
 
-# 25. REGLAS PARA FUTUROS DESARROLLADORES
+4.
 
-Antes de intervenir el proyecto:
-
-1. Leer completamente este README.
-2. Realizar copia o control de versión antes de modificar.
-3. No modificar los `entry IDs` sin revisar Google Forms.
-4. No cambiar nombres de IDs utilizados por JavaScript.
-5. No eliminar atributos ARIA.
-6. No eliminar la regla CSS asociada a `[hidden]`.
-7. No eliminar el consentimiento de tratamiento de datos.
-8. No modificar la paleta corporativa sin autorización.
-9. Mantener Montserrat como tipografía.
-10. Mantener títulos en Bold y cuerpo en Regular.
-11. Mantener enlaces externos seguros.
-12. No almacenar información sensible dentro del código.
-13. Probar cualquier modificación en desktop, tablet y móvil.
-14. Después de modificar el formulario, realizar prueba End-to-End.
-15. Después de desplegar, repetir las pruebas en producción.
+Publicar mediante GitHub.
 
 ---
 
-# 26. FLUJO DEL FORMULARIO
+# Autor
 
-Usuario
-   │
-   ▼
-Completa formulario
-   │
-   ▼
-Selecciona "Quién es usted"
-   │
-   ├── Diferente de "Otro"
-   │       └── Campo adicional oculto
-   │
-   └── "Otro"
-           └── Campo profesión visible + obligatorio
-   │
-   ▼
-Acepta tratamiento de datos
-   │
-   ▼
-JavaScript valida información
-   │
-   ├── ERROR
-   │     └── No se envía
-   │
-   └── CORRECTO
-           │
-           ▼
-       FormData
-           │
-           ▼
-      Google Forms
-           │
-           ▼
-    Mensaje de registro
-           │
-           ▼
-       form.reset()
+Proyecto desarrollado para
+
+NOVALFARM SAS
+
+Congreso Veterinario CVDC 2026
+
+Departamento de Tecnología e Informática
 
 ---
 
-# 27. CRITERIO DE CIERRE DEL PROYECTO
+# Licencia
 
-El proyecto podrá considerarse listo para publicación definitiva cuando:
+Uso interno exclusivo de NOVALFARM SAS.
 
-- No existan errores críticos en consola.
-- Todos los assets carguen mediante HTTPS.
-- Google Forms reciba correctamente todos los campos.
-- El consentimiento quede registrado.
-- El comportamiento de "Otro" funcione correctamente.
-- El formulario funcione desde el servidor de producción.
-- El menú móvil funcione mediante mouse, touch y teclado.
-- No existan desbordamientos horizontales.
-- La página haya sido probada en desktop, tablet y móvil.
-- Los enlaces externos funcionen.
-- La política de tratamiento de datos sea accesible.
-- La vista final sea aprobada por Novalfarm SAS.
-
----
-
-# 28. ESTADO DE ENTREGA
-
-A fecha de esta documentación:
-
-El desarrollo visual y funcional principal está completado.
-
-La prioridad actual NO es realizar cambios de diseño adicionales.
-
-La siguiente fase corresponde a:
-
-1. Validación final del código.
-2. Pruebas End-to-End con Google Forms.
-3. Pruebas responsive finales.
-4. Despliegue en servidor.
-5. Pruebas posteriores al despliegue.
-6. Corrección de incidencias, si aparecen.
-7. Publicación definitiva.
-
----
-
-© 2026 Novalfarm SAS.
-Documentación técnica — Proyecto Registro CVDC 2026.
+Proyecto desarrollado para operación institucional.
