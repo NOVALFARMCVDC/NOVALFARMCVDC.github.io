@@ -1,0 +1,2757 @@
+/**
+ * ============================================================
+ * NOVALFARM SAS
+ * CVDC 2026
+ * API DE CONSULTA DE PARTICIPANTES
+ * ============================================================
+ *
+ * Fuente:
+ * NOVALFARM_CVDC_2026_A_RESPUESTAS
+ *
+ * Funciones iniciales:
+ * - Buscar participantes
+ * - Consultar participante por ID_UNICO
+ *
+ * IMPORTANTE:
+ * Esta API únicamente consulta información.
+ * No modifica la hoja de respuestas.
+ * ============================================================
+ */
+
+
+const CONFIG = {
+
+  /* =====================================================
+     BASE A - PARTICIPANTES
+  ===================================================== */
+
+  HOJA_RESPUESTAS:
+    "Respuestas de formulario 1",
+
+  COLUMNAS: {
+
+    TIMESTAMP: 1,
+    NOMBRE: 2,
+    TELEFONO: 3,
+    CORREO: 4,
+    CIUDAD: 5,
+    DIRECCION: 6,
+    EDAD: 7,
+    GENERO: 8,
+    QUIEN_ES: 9,
+    OTRO: 10,
+    EMPRESA: 11,
+    AUTORIZACION: 12,
+    ID_UNICO: 13,
+    POSICION: 14
+
+  },
+
+
+  /* =====================================================
+     BASE B - GESTIONES COMERCIALES
+  ===================================================== */
+
+  SPREADSHEET_GESTIONES_ID:
+    "19IBybvIbRG6VLKKooNfh9D-A4d8BHJFeuwFWkbw3VzA",
+
+  HOJA_GESTIONES:
+    "Respuestas de formulario 1",
+
+  COLUMNAS_GESTION: {
+
+    // =====================================================
+    // FORM_DOS
+    // =====================================================
+
+    TIMESTAMP: 1,
+
+    // Datos certificados desde SHEETS A
+    ID_PARTICIPANTE: 2,
+    NOMBRE: 3,
+    TELEFONO: 4,
+    CORREO: 5,
+    CIUDAD: 6,
+    DIRECCION: 7,
+    EDAD: 8,
+    GENERO: 9,
+    QUIEN_ES: 10,
+    OTRO_PARTICIPANTE: 11,
+    EMPRESA: 12,
+    AUTORIZACION: 13,
+
+    // Datos propios de la gestión comercial
+    PODER_COMPRA: 14,
+    COMPRA_PRODUCTOS: 15,
+    DONDE_COMPRA: 16,
+    OTRO_DONDE_COMPRA: 17,
+    LINEA_INTERES: 18,
+    OTRA_LINEA: 19,
+    PRODUCTOS_INTERES: 20,
+    DESEA_INFORMACION: 21,
+    SOLICITA_VISITA: 22,
+    NIVEL_INTERES: 23,
+    POTENCIAL_COMPRA: 24,
+    TIEMPO_COMPRA: 25,
+    ACCION_SIGUIENTE: 26,
+    COMERCIAL_REGISTRO: 27,
+    RESPONSABLE_SEGUIMIENTO: 28,
+    OTRO_RESPONSABLE: 29,
+    COMENTARIO_VISITANTE: 30,
+    ACEPTA_INFO_COMERCIAL: 31,
+    ENTREGA_MUESTRA: 32,
+
+    ULTIMA_FORM_DOS: 32,
+
+    // =====================================================
+    // TRAZABILIDAD API
+    // =====================================================
+
+    ID_GESTION: 33,
+    REQUEST_ID: 34,
+    FECHA_REGISTRO_API: 35,
+    ORIGEN: 36,
+    ESTADO_REGISTRO: 37
+
+  },
+
+  CONSULTA_GESTIONES: {
+
+    LIMITE_PREDETERMINADO: 20,
+
+    LIMITE_MAXIMO: 100
+
+  },
+
+
+  /* =====================================================
+     CONFIGURACIÓN API
+  ===================================================== */
+
+  MIN_CARACTERES_BUSQUEDA: 3,
+
+  MAX_RESULTADOS: 10,
+
+  ORIGEN_GESTION:
+    "GESTIONCOMERCIAL_WEB",
+
+  PREFIJO_GESTION:
+    "GES-2026-",
+
+  LONGITUD_CONSECUTIVO_GESTION:
+    6,
+
+  ESTADO_REGISTRADO:
+    "REGISTRADO"
+
+};
+
+
+/**
+ * Punto de entrada de la API.
+ */
+function doGet(e) {
+
+  try {
+
+    const accion = String(e.parameter.action || "")
+      .trim()
+      .toLowerCase();
+
+    switch (accion) {
+
+      case "buscar":
+        return buscarParticipantesAPI(e);
+
+      case "participante":
+        return obtenerParticipanteAPI(e);
+
+      /* consulta comercial */
+
+      case "resumengestiones":
+        return obtenerResumenGestionesAPI(e);
+
+      case "gestiones":
+        return listarGestionesAPI(e);
+
+      case "gestion":
+        return obtenerGestionAPI(e);
+
+      /* consulta comercial */
+
+      case "estado":
+        return respuestaJSON({
+          ok: true,
+          servicio: "CVDC2026_API",
+          estado: "operativo"
+        });
+
+      /* codigo para pruebas */
+      case "diagnosticob":
+        return diagnosticarBaseB();
+
+      case "columnasformdos":
+        return diagnosticarColumnasFormDos();
+      /* codigo para pruebas */
+
+      default:
+
+        return respuestaJSON({
+          ok: false,
+          error: "Acción no válida."
+        });
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    return respuestaJSON({
+      ok: false,
+      error: "Error interno del servicio."
+    });
+
+  }
+
+}
+
+/**
+ * ============================================================
+ * POST - REGISTRO DE GESTIONES COMERCIALES
+ * ============================================================
+ */
+function doPost(e) {
+
+  try {
+
+    if (
+      !e ||
+      !e.postData ||
+      !e.postData.contents
+    ) {
+
+      return respuestaJSON({
+        ok: false,
+        estado: "solicitud_invalida",
+        error: "No se recibió información para procesar."
+      });
+
+    }
+
+
+    let datos;
+
+    try {
+
+      datos =
+        JSON.parse(
+          e.postData.contents
+        );
+
+    } catch (error) {
+
+      return respuestaJSON({
+        ok: false,
+        estado: "json_invalido",
+        error: "El cuerpo de la solicitud no contiene JSON válido."
+      });
+
+    }
+
+
+    const accion =
+      String(
+        datos.action || ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+      accion !==
+      "registrargestion"
+    ) {
+
+      return respuestaJSON({
+        ok: false,
+        estado: "accion_invalida",
+        error: "Acción POST no válida."
+      });
+
+    }
+
+
+    return registrarGestionAPI(
+      datos
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error doPost:",
+      error
+    );
+
+
+    return respuestaJSON({
+      ok: false,
+      estado: "error_servidor",
+      error: "No fue posible procesar la solicitud."
+    });
+
+  }
+
+}
+
+/**
+ * Convierte cualquier valor recibido a texto seguro
+ * para almacenamiento.
+ */
+function limpiarValorGestion(valor) {
+
+  if (
+    valor === null ||
+    valor === undefined
+  ) {
+    return "";
+  }
+
+  return String(valor).trim();
+
+}
+
+/**
+ * Normaliza exclusivamente los campos comerciales
+ * permitidos por la API.
+ *
+ * Cualquier propiedad adicional enviada por el
+ * navegador es ignorada.
+ */
+function normalizarDatosGestion(datos) {
+
+  const gestion =
+    datos &&
+      typeof datos.gestion === "object" &&
+      datos.gestion !== null
+      ? datos.gestion
+      : {};
+
+
+  return {
+
+    poderCompra:
+      limpiarValorGestion(
+        gestion.poderCompra
+      ),
+
+    compraProductos:
+      limpiarValorGestion(
+        gestion.compraProductos
+      ),
+
+    dondeCompra:
+      limpiarValorGestion(
+        gestion.dondeCompra
+      ),
+
+    otroDondeCompra:
+      limpiarValorGestion(
+        gestion.otroDondeCompra
+      ),
+
+    lineaInteres:
+      limpiarValorGestion(
+        gestion.lineaInteres
+      ),
+
+    otraLinea:
+      limpiarValorGestion(
+        gestion.otraLinea
+      ),
+
+    productosInteres:
+      limpiarValorGestion(
+        gestion.productosInteres
+      ),
+
+    deseaInformacion:
+      limpiarValorGestion(
+        gestion.deseaInformacion
+      ),
+
+    solicitaVisita:
+      limpiarValorGestion(
+        gestion.solicitaVisita
+      ),
+
+    nivelInteres:
+      limpiarValorGestion(
+        gestion.nivelInteres
+      ),
+
+    potencialCompra:
+      limpiarValorGestion(
+        gestion.potencialCompra
+      ),
+
+    tiempoCompra:
+      limpiarValorGestion(
+        gestion.tiempoCompra
+      ),
+
+    accionSiguiente:
+      limpiarValorGestion(
+        gestion.accionSiguiente
+      ),
+
+    comercialRegistro:
+      limpiarValorGestion(
+        gestion.comercialRegistro
+      ),
+
+    responsableSeguimiento:
+      limpiarValorGestion(
+        gestion.responsableSeguimiento
+      ),
+
+    otroResponsable:
+      limpiarValorGestion(
+        gestion.otroResponsable
+      ),
+
+    comentarioVisitante:
+      limpiarValorGestion(
+        gestion.comentarioVisitante
+      ),
+
+    aceptaInfoComercial:
+      limpiarValorGestion(
+        gestion.aceptaInfoComercial
+      ),
+
+    entregaMuestra:
+      limpiarValorGestion(
+        gestion.entregaMuestra
+      )
+
+  };
+
+}
+
+/**
+ * ============================================================
+ * CONSTRUCCIÓN DE FILA DEFINITIVA SHEETS B
+ * ============================================================
+ *
+ * A:M  -> servidor + SHEETS A
+ * N:AF -> datos gestión comercial
+ * AG:AK -> trazabilidad servidor
+ * ============================================================
+ */
+function construirFilaGestion(
+  participante,
+  gestion,
+  idGestion,
+  requestId
+) {
+
+  const C =
+    CONFIG.COLUMNAS_GESTION;
+
+  const fila =
+    new Array(
+      C.ESTADO_REGISTRO
+    ).fill("");
+
+
+  const ahora =
+    new Date();
+
+
+  // =====================================================
+  // A - MARCA TEMPORAL
+  // =====================================================
+
+  fila[C.TIMESTAMP - 1] =
+    ahora;
+
+
+  // =====================================================
+  // B:M - DATOS CERTIFICADOS DESDE SHEETS A
+  // =====================================================
+
+  fila[C.ID_PARTICIPANTE - 1] =
+    participante.id;
+
+  fila[C.NOMBRE - 1] =
+    participante.nombre;
+
+  fila[C.TELEFONO - 1] =
+    participante.telefono;
+
+  fila[C.CORREO - 1] =
+    participante.correo;
+
+  fila[C.CIUDAD - 1] =
+    participante.ciudad;
+
+  fila[C.DIRECCION - 1] =
+    participante.direccion;
+
+  fila[C.EDAD - 1] =
+    participante.edad;
+
+  fila[C.GENERO - 1] =
+    participante.genero;
+
+  fila[C.QUIEN_ES - 1] =
+    participante.quienEs;
+
+  fila[C.OTRO_PARTICIPANTE - 1] =
+    participante.otro;
+
+  fila[C.EMPRESA - 1] =
+    participante.empresa;
+
+  fila[C.AUTORIZACION - 1] =
+    participante.autorizacion;
+
+
+  // =====================================================
+  // N:AF - INFORMACIÓN COMERCIAL
+  // =====================================================
+
+  fila[C.PODER_COMPRA - 1] =
+    gestion.poderCompra;
+
+  fila[C.COMPRA_PRODUCTOS - 1] =
+    gestion.compraProductos;
+
+  fila[C.DONDE_COMPRA - 1] =
+    gestion.dondeCompra;
+
+  fila[C.OTRO_DONDE_COMPRA - 1] =
+    gestion.otroDondeCompra;
+
+  fila[C.LINEA_INTERES - 1] =
+    gestion.lineaInteres;
+
+  fila[C.OTRA_LINEA - 1] =
+    gestion.otraLinea;
+
+  fila[C.PRODUCTOS_INTERES - 1] =
+    gestion.productosInteres;
+
+  fila[C.DESEA_INFORMACION - 1] =
+    gestion.deseaInformacion;
+
+  fila[C.SOLICITA_VISITA - 1] =
+    gestion.solicitaVisita;
+
+  fila[C.NIVEL_INTERES - 1] =
+    gestion.nivelInteres;
+
+  fila[C.POTENCIAL_COMPRA - 1] =
+    gestion.potencialCompra;
+
+  fila[C.TIEMPO_COMPRA - 1] =
+    gestion.tiempoCompra;
+
+  fila[C.ACCION_SIGUIENTE - 1] =
+    gestion.accionSiguiente;
+
+  fila[C.COMERCIAL_REGISTRO - 1] =
+    gestion.comercialRegistro;
+
+  fila[C.RESPONSABLE_SEGUIMIENTO - 1] =
+    gestion.responsableSeguimiento;
+
+  fila[C.OTRO_RESPONSABLE - 1] =
+    gestion.otroResponsable;
+
+  fila[C.COMENTARIO_VISITANTE - 1] =
+    gestion.comentarioVisitante;
+
+  fila[C.ACEPTA_INFO_COMERCIAL - 1] =
+    gestion.aceptaInfoComercial;
+
+  fila[C.ENTREGA_MUESTRA - 1] =
+    gestion.entregaMuestra;
+
+
+  // =====================================================
+  // AG:AK - TRAZABILIDAD API
+  // =====================================================
+
+  fila[C.ID_GESTION - 1] =
+    idGestion;
+
+  fila[C.REQUEST_ID - 1] =
+    requestId;
+
+  fila[C.FECHA_REGISTRO_API - 1] =
+    ahora;
+
+  fila[C.ORIGEN - 1] =
+    CONFIG.ORIGEN_GESTION;
+
+  fila[C.ESTADO_REGISTRO - 1] =
+    CONFIG.ESTADO_REGISTRADO;
+
+
+  return fila;
+
+}
+
+/**
+ * Registra una gestión comercial.
+ */
+function registrarGestionAPI(datos) {
+
+  const requestId =
+    String(
+      datos.requestId || ""
+    ).trim();
+
+  const participanteId =
+    String(
+      datos.participanteId || ""
+    ).trim();
+
+
+  if (!requestId) {
+
+    return respuestaJSON({
+      ok: false,
+      estado: "request_id_requerido",
+      error: "REQUEST_ID es obligatorio."
+    });
+
+  }
+
+
+  if (!participanteId) {
+
+    return respuestaJSON({
+      ok: false,
+      estado: "participante_requerido",
+      error: "El ID del participante es obligatorio."
+    });
+
+  }
+
+
+  /*
+   * Antes de escribir en B comprobamos que
+   * el participante realmente exista en A.
+   */
+
+  const participante =
+    buscarParticipanteInterno(
+      participanteId
+    );
+
+
+  if (!participante) {
+
+    return respuestaJSON({
+      ok: false,
+      estado: "participante_no_encontrado",
+      error: "El participante no existe en la base principal."
+    });
+
+  }
+
+
+  /*
+   * Bloqueo para evitar condiciones de carrera.
+   */
+
+  const lock =
+    LockService.getScriptLock();
+
+
+  try {
+
+    lock.waitLock(
+      10000
+    );
+
+
+    const gestionExistente =
+      buscarGestionPorRequestId(
+        requestId
+      );
+
+
+    /*
+     * IDEMPOTENCIA
+     *
+     * Si REQUEST_ID ya existe,
+     * NO creamos otra fila.
+     */
+
+    if (gestionExistente) {
+
+      return respuestaJSON({
+
+        ok: true,
+
+        estado:
+          "gestion_ya_registrada",
+
+        duplicado:
+          true,
+
+        idGestion:
+          gestionExistente.idGestion,
+
+        requestId:
+          requestId,
+
+        idParticipante:
+          participanteId
+
+      });
+
+    }
+
+
+    const idGestion =
+      generarIdGestion();
+
+    const gestion =
+      normalizarDatosGestion(
+        datos
+      );
+
+
+    const fila =
+      construirFilaGestion(
+        participante,
+        gestion,
+        idGestion,
+        requestId
+      );
+
+
+    const hoja =
+      obtenerHojaGestiones();
+
+
+    hoja
+      .getRange(
+        hoja.getLastRow() + 1,
+        1,
+        1,
+        fila.length
+      )
+      .setValues([
+        fila
+      ]);
+
+    return respuestaJSON({
+
+      ok: true,
+
+      estado:
+        "gestion_registrada",
+
+      duplicado:
+        false,
+
+      idGestion:
+        idGestion,
+
+      requestId:
+        requestId,
+
+      idParticipante:
+        participanteId
+
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "Error registrarGestionAPI:",
+      error
+    );
+
+
+    return respuestaJSON({
+
+      ok: false,
+
+      estado:
+        "error_registro",
+
+      error:
+        "No fue posible registrar la gestión comercial."
+
+    });
+
+
+  } finally {
+
+    try {
+
+      lock.releaseLock();
+
+    } catch (error) {
+
+      // El bloqueo puede no haberse adquirido.
+
+    }
+
+  }
+
+}
+
+/**
+ * Busca participantes por:
+ *
+ * - Nombre
+ * - Correo
+ * - Teléfono
+ *
+ * Devuelve máximo CONFIG.MAX_RESULTADOS.
+ */
+function buscarParticipantesAPI(e) {
+
+  const termino = normalizarTexto(
+    e.parameter.q || ""
+  );
+
+  if (
+    termino.length <
+    CONFIG.MIN_CARACTERES_BUSQUEDA
+  ) {
+
+    return respuestaJSON({
+      ok: false,
+      error: "Ingrese al menos 3 caracteres."
+    });
+
+  }
+
+
+  const hoja = obtenerHojaRespuestas();
+
+  const ultimaFila = hoja.getLastRow();
+
+  if (ultimaFila < 2) {
+
+    return respuestaJSON({
+      ok: true,
+      total: 0,
+      resultados: []
+    });
+
+  }
+
+
+  const datos = hoja
+    .getRange(
+      2,
+      1,
+      ultimaFila - 1,
+      CONFIG.COLUMNAS.POSICION
+    )
+    .getDisplayValues();
+
+
+  const resultados = [];
+
+
+  for (const fila of datos) {
+
+    const participante =
+      convertirFilaParticipante(fila);
+
+
+    // Ignorar filas preparadas pero vacías.
+    if (!participanteValido(participante)) {
+      continue;
+    }
+
+
+    const nombre =
+      normalizarTexto(participante.nombre);
+
+    const correo =
+      normalizarTexto(participante.correo);
+
+    const telefono =
+      normalizarTexto(participante.telefono);
+
+
+    const coincide =
+      nombre.includes(termino) ||
+      correo.includes(termino) ||
+      telefono.includes(termino);
+
+
+    if (!coincide) {
+      continue;
+    }
+
+
+    /*
+     * Por privacidad, el buscador NO devuelve
+     * dirección, género, autorización, etc.
+     */
+    resultados.push({
+
+      id: participante.id,
+
+      nombre: participante.nombre,
+
+      telefono: participante.telefono,
+
+      correo: participante.correo
+
+    });
+
+
+    if (
+      resultados.length >=
+      CONFIG.MAX_RESULTADOS
+    ) {
+      break;
+    }
+
+  }
+
+
+  return respuestaJSON({
+
+    ok: true,
+
+    total: resultados.length,
+
+    resultados: resultados
+
+  });
+
+}
+
+/* codigo de prueba */
+
+/**
+ * Busca internamente un participante por ID.
+ *
+ * Devuelve:
+ * objeto participante
+ * o null.
+ */
+function buscarParticipanteInterno(id) {
+
+  const idBuscado =
+    String(id || "")
+      .trim()
+      .toLowerCase();
+
+
+  if (!idBuscado) {
+
+    return null;
+
+  }
+
+
+  const hoja =
+    obtenerHojaRespuestas();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+
+  if (ultimaFila < 2) {
+
+    return null;
+
+  }
+
+
+  const ultimaColumna =
+    Math.max(
+      hoja.getLastColumn(),
+      CONFIG.COLUMNAS.POSICION
+    );
+
+
+  const datos =
+    hoja
+      .getRange(
+        2,
+        1,
+        ultimaFila - 1,
+        ultimaColumna
+      )
+      .getDisplayValues();
+
+
+  for (
+    let i = 0;
+    i < datos.length;
+    i++
+  ) {
+
+    const fila =
+      datos[i];
+
+    const participante =
+      convertirFilaParticipante(
+        fila
+      );
+
+
+    if (
+      participanteValido(
+        participante
+      ) &&
+      String(participante.id)
+        .trim()
+        .toLowerCase() ===
+      idBuscado
+    ) {
+
+      return participante;
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+/**
+ * Busca una gestión previamente registrada
+ * utilizando REQUEST_ID.
+ */
+function buscarGestionPorRequestId(
+  requestId
+) {
+
+  const hoja =
+    obtenerHojaGestiones();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+
+  if (ultimaFila < 2) {
+
+    return null;
+
+  }
+
+
+  const columnaRequest =
+    CONFIG.COLUMNAS_GESTION
+      .REQUEST_ID;
+
+
+  const valores =
+    hoja
+      .getRange(
+        2,
+        columnaRequest,
+        ultimaFila - 1,
+        1
+      )
+      .getDisplayValues();
+
+
+  const buscado =
+    String(requestId)
+      .trim();
+
+
+  for (
+    let i = 0;
+    i < valores.length;
+    i++
+  ) {
+
+    if (
+      String(
+        valores[i][0]
+      ).trim() === buscado
+    ) {
+
+      const fila =
+        i + 2;
+
+
+      const idGestion =
+        hoja
+          .getRange(
+            fila,
+            CONFIG.COLUMNAS_GESTION
+              .ID_GESTION
+          )
+          .getDisplayValue();
+
+
+      return {
+        fila: fila,
+        idGestion: idGestion
+      };
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+/**
+ * Genera el siguiente ID de gestión.
+ *
+ * Formato:
+ * GES-2026-000001
+ */
+function generarIdGestion() {
+
+  const hoja =
+    obtenerHojaGestiones();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+
+  let maximo =
+    0;
+
+
+  if (ultimaFila >= 2) {
+
+    const valores =
+      hoja
+        .getRange(
+          2,
+          CONFIG.COLUMNAS_GESTION
+            .ID_GESTION,
+          ultimaFila - 1,
+          1
+        )
+        .getDisplayValues();
+
+
+    valores.forEach(
+      function (fila) {
+
+        const valor =
+          String(
+            fila[0] || ""
+          ).trim();
+
+
+        if (
+          !valor.startsWith(
+            CONFIG.PREFIJO_GESTION
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        const numero =
+          parseInt(
+            valor.substring(
+              CONFIG.PREFIJO_GESTION.length
+            ),
+            10
+          );
+
+
+        if (
+          Number.isFinite(numero) &&
+          numero > maximo
+        ) {
+
+          maximo =
+            numero;
+
+        }
+
+      }
+    );
+
+  }
+
+
+  const siguiente =
+    maximo + 1;
+
+
+  return (
+    CONFIG.PREFIJO_GESTION +
+    String(siguiente)
+      .padStart(
+        CONFIG
+          .LONGITUD_CONSECUTIVO_GESTION,
+        "0"
+      )
+  );
+
+}
+
+/* codigo de prueba */
+
+
+/**
+ * Obtiene un participante completo mediante ID_UNICO.
+ */
+function obtenerParticipanteAPI(e) {
+
+  const idBuscado =
+    String(e.parameter.id || "")
+      .trim()
+      .toUpperCase();
+
+
+  if (!idBuscado) {
+
+    return respuestaJSON({
+      ok: false,
+      error: "Debe indicar el ID del participante."
+    });
+
+  }
+
+
+  const hoja = obtenerHojaRespuestas();
+
+  const ultimaFila = hoja.getLastRow();
+
+
+  if (ultimaFila < 2) {
+
+    return respuestaJSON({
+      ok: false,
+      error: "No existen participantes registrados."
+    });
+
+  }
+
+
+  const datos = hoja
+    .getRange(
+      2,
+      1,
+      ultimaFila - 1,
+      CONFIG.COLUMNAS.POSICION
+    )
+    .getDisplayValues();
+
+
+  for (const fila of datos) {
+
+    const participante =
+      convertirFilaParticipante(fila);
+
+
+    if (!participanteValido(participante)) {
+      continue;
+    }
+
+
+    if (
+      String(participante.id)
+        .trim()
+        .toUpperCase() === idBuscado
+    ) {
+
+      return respuestaJSON({
+
+        ok: true,
+
+        participante: participante
+
+      });
+
+    }
+
+  }
+
+
+  return respuestaJSON({
+    ok: false,
+    error: "Participante no encontrado."
+  });
+
+}
+
+/**
+ * Convierte una fila de Sheets en un objeto.
+ */
+function convertirFilaParticipante(fila) {
+
+  const c = CONFIG.COLUMNAS;
+
+  return {
+
+    timestamp:
+      fila[c.TIMESTAMP - 1],
+
+    nombre:
+      fila[c.NOMBRE - 1],
+
+    telefono:
+      fila[c.TELEFONO - 1],
+
+    correo:
+      fila[c.CORREO - 1],
+
+    ciudad:
+      fila[c.CIUDAD - 1],
+
+    direccion:
+      fila[c.DIRECCION - 1],
+
+    edad:
+      fila[c.EDAD - 1],
+
+    genero:
+      fila[c.GENERO - 1],
+
+    quienEs:
+      fila[c.QUIEN_ES - 1],
+
+    otro:
+      fila[c.OTRO - 1],
+
+    empresa:
+      fila[c.EMPRESA - 1],
+
+    autorizacion:
+      fila[c.AUTORIZACION - 1],
+
+    id:
+      fila[c.ID_UNICO - 1]
+
+  };
+
+}
+
+/**
+ * Evita considerar como participantes
+ * las filas preparadas pero todavía vacías.
+ */
+function participanteValido(participante) {
+
+  return Boolean(
+    participante.timestamp &&
+    participante.nombre &&
+    participante.id
+  );
+
+}
+
+/**
+ * Normaliza texto para permitir búsquedas
+ * más tolerantes.
+ *
+ * Ejemplo:
+ *
+ * "María Gómez"
+ *
+ * puede encontrarse escribiendo:
+ *
+ * "maria"
+ */
+function normalizarTexto(valor) {
+
+  return String(valor || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+}
+
+function obtenerHojaRespuestas() {
+
+  const ss =
+    SpreadsheetApp.getActiveSpreadsheet();
+
+  const hoja =
+    ss.getSheetByName(
+      CONFIG.HOJA_RESPUESTAS
+    );
+
+
+  if (!hoja) {
+
+    throw new Error(
+      "No se encontró la hoja: " +
+      CONFIG.HOJA_RESPUESTAS
+    );
+
+  }
+
+
+  return hoja;
+
+}
+
+/* codigo temporal para pruebas */
+
+/**
+ * Diagnóstico temporal de SHEETS B.
+ *
+ * No escribe ni modifica información.
+ */
+function diagnosticarBaseB() {
+
+  const hoja =
+    obtenerHojaGestiones();
+
+  const ultimaColumna =
+    hoja.getLastColumn();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+  const encabezados =
+    hoja
+      .getRange(
+        1,
+        1,
+        1,
+        ultimaColumna
+      )
+      .getDisplayValues()[0];
+
+
+  return respuestaJSON({
+
+    ok: true,
+
+    base:
+      "NOVALFARM_CVDC_2026_B_RESPUESTAS",
+
+    hoja:
+      hoja.getName(),
+
+    ultimaFila:
+      ultimaFila,
+
+    ultimaColumna:
+      ultimaColumna,
+
+    columnasTecnicas: {
+
+      ID_GESTION:
+        encabezados[32] || "",
+
+      REQUEST_ID:
+        encabezados[33] || "",
+
+      FECHA_REGISTRO_API:
+        encabezados[34] || "",
+
+      ORIGEN:
+        encabezados[35] || "",
+
+      ESTADO_REGISTRO:
+        encabezados[36] || ""
+
+    }
+
+  });
+
+}
+
+/**
+ * ============================================================
+ * DIAGNÓSTICO TEMPORAL - ESTRUCTURA COMPLETA FORM_DOS
+ * ============================================================
+ *
+ * Devuelve las columnas A:AF con:
+ * - Número
+ * - Letra
+ * - Encabezado
+ *
+ * NO modifica información.
+ * ============================================================
+ */
+
+function diagnosticarColumnasFormDos() {
+
+  const hoja =
+    obtenerHojaGestiones();
+
+
+  const encabezados =
+    hoja
+      .getRange(
+        1,
+        1,
+        1,
+        CONFIG.COLUMNAS_GESTION.ULTIMA_FORM_DOS
+      )
+      .getDisplayValues()[0];
+
+
+  const columnas =
+    encabezados.map(
+      function (encabezado, indice) {
+
+        return {
+
+          numero:
+            indice + 1,
+
+          letra:
+            numeroALetraColumna(
+              indice + 1
+            ),
+
+          encabezado:
+            encabezado
+
+        };
+
+      }
+    );
+
+
+  return respuestaJSON({
+
+    ok: true,
+
+    totalColumnas:
+      columnas.length,
+
+    columnas:
+      columnas
+
+  });
+
+}
+
+/**
+ * Convierte número de columna de Sheets
+ * a su representación alfabética.
+ *
+ * 1  -> A
+ * 26 -> Z
+ * 27 -> AA
+ * 32 -> AF
+ */
+function numeroALetraColumna(numero) {
+
+  let resultado =
+    "";
+
+  let valor =
+    numero;
+
+
+  while (valor > 0) {
+
+    const resto =
+      (valor - 1) % 26;
+
+
+    resultado =
+      String.fromCharCode(
+        65 + resto
+      ) +
+      resultado;
+
+
+    valor =
+      Math.floor(
+        (valor - 1) / 26
+      );
+
+  }
+
+
+  return resultado;
+
+}
+
+/**
+ * ============================================================
+ * FASE 4 - CONVERSIÓN DE FILA DE GESTIÓN
+ * ============================================================
+ *
+ * Convierte una fila A:AK de SHEETS B
+ * en un objeto estructurado.
+ *
+ * Esta función constituye el mapa central de lectura
+ * de NOVALFARM_CVDC_2026_B_RESPUESTAS.
+ * ============================================================
+ */
+function convertirFilaGestion(fila) {
+
+  const C =
+    CONFIG.COLUMNAS_GESTION;
+
+
+  return {
+
+    /* =====================================================
+       IDENTIFICACIÓN
+    ===================================================== */
+
+    timestamp:
+      fila[C.TIMESTAMP - 1],
+
+    idParticipante:
+      fila[C.ID_PARTICIPANTE - 1],
+
+    nombre:
+      fila[C.NOMBRE - 1],
+
+    telefono:
+      fila[C.TELEFONO - 1],
+
+    correo:
+      fila[C.CORREO - 1],
+
+    ciudad:
+      fila[C.CIUDAD - 1],
+
+    direccion:
+      fila[C.DIRECCION - 1],
+
+    edad:
+      fila[C.EDAD - 1],
+
+    genero:
+      fila[C.GENERO - 1],
+
+    quienEs:
+      fila[C.QUIEN_ES - 1],
+
+    otroParticipante:
+      fila[C.OTRO_PARTICIPANTE - 1],
+
+    empresa:
+      fila[C.EMPRESA - 1],
+
+    autorizacion:
+      fila[C.AUTORIZACION - 1],
+
+
+    /* =====================================================
+       INFORMACIÓN COMERCIAL
+    ===================================================== */
+
+    poderCompra:
+      fila[C.PODER_COMPRA - 1],
+
+    compraProductos:
+      fila[C.COMPRA_PRODUCTOS - 1],
+
+    dondeCompra:
+      fila[C.DONDE_COMPRA - 1],
+
+    otroDondeCompra:
+      fila[C.OTRO_DONDE_COMPRA - 1],
+
+    lineaInteres:
+      fila[C.LINEA_INTERES - 1],
+
+    otraLinea:
+      fila[C.OTRA_LINEA - 1],
+
+    productosInteres:
+      fila[C.PRODUCTOS_INTERES - 1],
+
+    deseaInformacion:
+      fila[C.DESEA_INFORMACION - 1],
+
+    solicitaVisita:
+      fila[C.SOLICITA_VISITA - 1],
+
+    nivelInteres:
+      fila[C.NIVEL_INTERES - 1],
+
+    potencialCompra:
+      fila[C.POTENCIAL_COMPRA - 1],
+
+    tiempoCompra:
+      fila[C.TIEMPO_COMPRA - 1],
+
+    accionSiguiente:
+      fila[C.ACCION_SIGUIENTE - 1],
+
+    comercialRegistro:
+      fila[C.COMERCIAL_REGISTRO - 1],
+
+    responsableSeguimiento:
+      fila[C.RESPONSABLE_SEGUIMIENTO - 1],
+
+    otroResponsable:
+      fila[C.OTRO_RESPONSABLE - 1],
+
+    comentarioVisitante:
+      fila[C.COMENTARIO_VISITANTE - 1],
+
+    aceptaInfoComercial:
+      fila[C.ACEPTA_INFO_COMERCIAL - 1],
+
+    entregaMuestra:
+      fila[C.ENTREGA_MUESTRA - 1],
+
+
+    /* =====================================================
+       TRAZABILIDAD
+    ===================================================== */
+
+    idGestion:
+      fila[C.ID_GESTION - 1],
+
+    requestId:
+      fila[C.REQUEST_ID - 1],
+
+    fechaRegistroApi:
+      fila[C.FECHA_REGISTRO_API - 1],
+
+    origen:
+      fila[C.ORIGEN - 1],
+
+    estadoRegistro:
+      fila[C.ESTADO_REGISTRO - 1]
+
+  };
+
+}
+
+/**
+ * Determina si una fila representa
+ * una gestión comercial válida.
+ */
+function gestionValida(gestion) {
+
+  if (!gestion) {
+    return false;
+  }
+
+
+  const estado =
+    normalizarTexto(
+      gestion.estadoRegistro
+    );
+
+
+  return Boolean(
+
+    gestion.idGestion &&
+
+    gestion.idParticipante &&
+
+    gestion.nombre &&
+
+    gestion.fechaRegistroApi &&
+
+    estado ===
+    normalizarTexto(
+      CONFIG.ESTADO_REGISTRADO
+    )
+
+  );
+
+}
+
+/**
+ * ============================================================
+ * FASE 4.1
+ * RESUMEN EJECUTIVO DE GESTIONES
+ * ============================================================
+ */
+function obtenerResumenGestionesAPI(e) {
+
+  const hoja =
+    obtenerHojaGestiones();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+
+  if (ultimaFila < 2) {
+
+    return respuestaJSON({
+
+      ok: true,
+
+      resumen: {
+
+        totalGestiones: 0,
+
+        interesAlto: 0,
+
+        potencialAlto: 0,
+
+        solicitanVisita: 0,
+
+        entregaMuestra: 0
+
+      }
+
+    });
+
+  }
+
+
+  const datos =
+    hoja
+      .getRange(
+        2,
+        1,
+        ultimaFila - 1,
+        CONFIG.COLUMNAS_GESTION
+          .ESTADO_REGISTRO
+      )
+      .getDisplayValues();
+
+
+  let totalGestiones = 0;
+
+  let interesAlto = 0;
+
+  let potencialAlto = 0;
+
+  let solicitanVisita = 0;
+
+  let entregaMuestra = 0;
+
+
+  datos.forEach(
+    function (fila) {
+
+      const gestion =
+        convertirFilaGestion(
+          fila
+        );
+
+
+      if (
+        !gestionValida(
+          gestion
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      totalGestiones++;
+
+
+      if (
+        normalizarTexto(
+          gestion.nivelInteres
+        ) === "alto"
+      ) {
+
+        interesAlto++;
+
+      }
+
+
+      if (
+        normalizarTexto(
+          gestion.potencialCompra
+        ) === "alto"
+      ) {
+
+        potencialAlto++;
+
+      }
+
+
+      if (
+        normalizarTexto(
+          gestion.solicitaVisita
+        ) === "si"
+      ) {
+
+        solicitanVisita++;
+
+      }
+
+
+      if (
+        normalizarTexto(
+          gestion.entregaMuestra
+        ) === "si"
+      ) {
+
+        entregaMuestra++;
+
+      }
+
+    }
+  );
+
+
+  return respuestaJSON({
+
+    ok: true,
+
+    resumen: {
+
+      totalGestiones:
+        totalGestiones,
+
+      interesAlto:
+        interesAlto,
+
+      potencialAlto:
+        potencialAlto,
+
+      solicitanVisita:
+        solicitanVisita,
+
+      entregaMuestra:
+        entregaMuestra
+
+    }
+
+  });
+
+}
+
+/**
+ * ============================================================
+ * FASE 4.1
+ * LISTADO CONTROLADO DE GESTIONES
+ * ============================================================
+ */
+
+function obtenerParametrosGestiones(e) {
+
+  const parametros =
+    e && e.parameter
+      ? e.parameter
+      : {};
+
+
+  let pagina =
+    parseInt(
+      parametros.page,
+      10
+    );
+
+
+  let limite =
+    parseInt(
+      parametros.limit,
+      10
+    );
+
+
+  if (
+    !Number.isInteger(pagina) ||
+    pagina < 1
+  ) {
+
+    pagina = 1;
+
+  }
+
+
+  if (
+    !Number.isInteger(limite) ||
+    limite < 1
+  ) {
+
+    limite =
+      CONFIG.CONSULTA_GESTIONES
+        .LIMITE_PREDETERMINADO;
+
+  }
+
+
+  limite =
+    Math.min(
+      limite,
+      CONFIG.CONSULTA_GESTIONES
+        .LIMITE_MAXIMO
+    );
+
+
+  return {
+
+    pagina:
+      pagina,
+
+    limite:
+      limite,
+
+    nivel:
+      String(
+        parametros.nivel || ""
+      ).trim(),
+
+    potencial:
+      String(
+        parametros.potencial || ""
+      ).trim(),
+
+    comercial:
+      String(
+        parametros.comercial || ""
+      ).trim(),
+
+    visita:
+      String(
+        parametros.visita || ""
+      ).trim(),
+
+    linea:
+      String(
+        parametros.linea || ""
+      ).trim(),
+
+    buscar:
+      String(
+        parametros.buscar || ""
+      ).trim()
+
+  };
+
+}
+
+function cumpleFiltrosGestion(
+  gestion,
+  filtros
+) {
+
+  if (
+    filtros.nivel &&
+    normalizarTexto(
+      gestion.nivelInteres
+    ) !==
+    normalizarTexto(
+      filtros.nivel
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    filtros.potencial &&
+    normalizarTexto(
+      gestion.potencialCompra
+    ) !==
+    normalizarTexto(
+      filtros.potencial
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    filtros.visita &&
+    normalizarTexto(
+      gestion.solicitaVisita
+    ) !==
+    normalizarTexto(
+      filtros.visita
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    filtros.comercial &&
+    !normalizarTexto(
+      gestion.comercialRegistro
+    ).includes(
+      normalizarTexto(
+        filtros.comercial
+      )
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    filtros.linea
+  ) {
+
+    const lineaPrincipal =
+      normalizarTexto(
+        gestion.lineaInteres
+      );
+
+    const otraLinea =
+      normalizarTexto(
+        gestion.otraLinea
+      );
+
+    const buscada =
+      normalizarTexto(
+        filtros.linea
+      );
+
+
+    if (
+      !lineaPrincipal.includes(
+        buscada
+      ) &&
+      !otraLinea.includes(
+        buscada
+      )
+    ) {
+
+      return false;
+
+    }
+
+  }
+
+
+  if (
+    filtros.buscar
+  ) {
+
+    const termino =
+      normalizarTexto(
+        filtros.buscar
+      );
+
+
+    const contenido =
+      [
+
+        gestion.idGestion,
+
+        gestion.idParticipante,
+
+        gestion.nombre,
+
+        gestion.empresa,
+
+        gestion.lineaInteres,
+
+        gestion.otraLinea,
+
+        gestion.productosInteres,
+
+        gestion.comercialRegistro,
+
+        gestion.responsableSeguimiento
+
+      ]
+        .map(
+          normalizarTexto
+        )
+        .join(" ");
+
+
+    if (
+      !contenido.includes(
+        termino
+      )
+    ) {
+
+      return false;
+
+    }
+
+  }
+
+
+  return true;
+
+}
+
+function listarGestionesAPI(e) {
+
+    const filtros =
+        obtenerParametrosGestiones(
+            e
+        );
+
+
+    const hoja =
+        obtenerHojaGestiones();
+
+
+    const ultimaFila =
+        hoja.getLastRow();
+
+
+    if (ultimaFila < 2) {
+
+        return respuestaJSON({
+
+            ok: true,
+
+            total: 0,
+
+            pagina:
+                filtros.pagina,
+
+            limite:
+                filtros.limite,
+
+            totalPaginas: 0,
+
+            gestiones: []
+
+        });
+
+    }
+
+
+    const datos =
+        hoja
+            .getRange(
+                2,
+                1,
+                ultimaFila - 1,
+                CONFIG.COLUMNAS_GESTION
+                    .ESTADO_REGISTRO
+            )
+            .getDisplayValues();
+
+
+    const resultados =
+        [];
+
+
+    for (
+        let i = datos.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const gestion =
+            convertirFilaGestion(
+                datos[i]
+            );
+
+
+        if (
+            !gestionValida(
+                gestion
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        if (
+            !cumpleFiltrosGestion(
+                gestion,
+                filtros
+            )
+        ) {
+
+            continue;
+
+        }
+
+
+        resultados.push({
+
+            idGestion:
+                gestion.idGestion,
+
+            idParticipante:
+                gestion.idParticipante,
+
+            nombre:
+                gestion.nombre,
+
+            empresa:
+                gestion.empresa,
+
+            lineaInteres:
+                gestion.lineaInteres,
+
+            otraLinea:
+                gestion.otraLinea,
+
+            nivelInteres:
+                gestion.nivelInteres,
+
+            potencialCompra:
+                gestion.potencialCompra,
+
+            solicitaVisita:
+                gestion.solicitaVisita,
+
+            tiempoCompra:
+                gestion.tiempoCompra,
+
+            accionSiguiente:
+                gestion.accionSiguiente,
+
+            comercialRegistro:
+                gestion.comercialRegistro,
+
+            responsableSeguimiento:
+                gestion.responsableSeguimiento,
+
+            fechaRegistroApi:
+                gestion.fechaRegistroApi,
+
+            estadoRegistro:
+                gestion.estadoRegistro
+
+        });
+
+    }
+
+
+    const total =
+        resultados.length;
+
+
+    const totalPaginas =
+        total === 0
+            ? 0
+            : Math.ceil(
+                total /
+                filtros.limite
+            );
+
+
+    const inicio =
+        (
+            filtros.pagina - 1
+        ) *
+        filtros.limite;
+
+
+    const fin =
+        inicio +
+        filtros.limite;
+
+
+    const paginaResultados =
+        resultados.slice(
+            inicio,
+            fin
+        );
+
+
+    return respuestaJSON({
+
+        ok: true,
+
+        total:
+            total,
+
+        pagina:
+            filtros.pagina,
+
+        limite:
+            filtros.limite,
+
+        totalPaginas:
+            totalPaginas,
+
+        resultadosPagina:
+            paginaResultados.length,
+
+        gestiones:
+            paginaResultados
+
+    });
+
+}
+
+/**
+ * ============================================================
+ * FASE 4.1
+ * DETALLE INDIVIDUAL DE UNA GESTIÓN
+ * ============================================================
+ */
+function obtenerGestionAPI(e) {
+
+  const idBuscado =
+    String(
+      e.parameter.id || ""
+    )
+      .trim()
+      .toUpperCase();
+
+
+  if (!idBuscado) {
+
+    return respuestaJSON({
+
+      ok: false,
+
+      error:
+        "Debe indicar el ID de la gestión."
+
+    });
+
+  }
+
+
+  const hoja =
+    obtenerHojaGestiones();
+
+  const ultimaFila =
+    hoja.getLastRow();
+
+
+  if (ultimaFila < 2) {
+
+    return respuestaJSON({
+
+      ok: false,
+
+      error:
+        "No existen gestiones registradas."
+
+    });
+
+  }
+
+
+  const datos =
+    hoja
+      .getRange(
+        2,
+        1,
+        ultimaFila - 1,
+        CONFIG.COLUMNAS_GESTION
+          .ESTADO_REGISTRO
+      )
+      .getDisplayValues();
+
+
+  for (const fila of datos) {
+
+    const gestion =
+      convertirFilaGestion(
+        fila
+      );
+
+
+    if (
+      String(
+        gestion.idGestion
+      )
+        .trim()
+        .toUpperCase() ===
+      idBuscado
+    ) {
+
+      return respuestaJSON({
+
+        ok: true,
+
+        gestion: gestion
+
+      });
+
+    }
+
+  }
+
+
+  return respuestaJSON({
+
+    ok: false,
+
+    error:
+      "Gestión comercial no encontrada."
+
+  });
+
+}
+
+/* codigo temporal para pruebas */
+/**
+ * Obtiene la hoja de gestiones comerciales
+ * ubicada en NOVALFARM_CVDC_2026_B_RESPUESTAS.
+ */
+function obtenerHojaGestiones() {
+
+  const ss =
+    SpreadsheetApp.openById(
+      CONFIG.SPREADSHEET_GESTIONES_ID
+    );
+
+  const hoja =
+    ss.getSheetByName(
+      CONFIG.HOJA_GESTIONES
+    );
+
+  if (!hoja) {
+
+    throw new Error(
+      "No se encontró la hoja de gestiones: " +
+      CONFIG.HOJA_GESTIONES
+    );
+
+  }
+
+  return hoja;
+
+}
+
+/* CODIGO PRUEBA */
+
+function pruebaRegistrarGestion() {
+
+  const datos = {
+
+    action:
+      "registrargestion",
+
+    requestId:
+      "TEST-FASE3-0002",
+
+    participanteId:
+      "CVDC2026-0010",
+
+    gestion: {
+
+      poderCompra:
+        "Sí",
+
+      compraProductos:
+        "Sí",
+
+      dondeCompra:
+        "Distribuidor",
+
+      otroDondeCompra:
+        "",
+
+      lineaInteres:
+        "Dermatológica",
+
+      otraLinea:
+        "",
+
+      productosInteres:
+        "PRUEBA PRODUCTOS FASE 3",
+
+      deseaInformacion:
+        "Sí",
+
+      solicitaVisita:
+        "Sí",
+
+      nivelInteres:
+        "Alto",
+
+      potencialCompra:
+        "Alto",
+
+      tiempoCompra:
+        "Corto plazo",
+
+      accionSiguiente:
+        "Realizar seguimiento comercial",
+
+      comercialRegistro:
+        "PRUEBA COMERCIAL",
+
+      responsableSeguimiento:
+        "PRUEBA RESPONSABLE",
+
+      otroResponsable:
+        "",
+
+      comentarioVisitante:
+        "PRUEBA CONTROLADA BACKEND FASE 3",
+
+      aceptaInfoComercial:
+        "Sí",
+
+      entregaMuestra:
+        "No"
+
+    }
+
+  };
+
+
+  const resultado =
+    registrarGestionAPI(
+      datos
+    );
+
+
+  Logger.log(
+    resultado.getContent()
+  );
+
+}
+/* CODIGO PRUEBA */
+
+function respuestaJSON(datos) {
+
+  return ContentService
+    .createTextOutput(
+      JSON.stringify(datos)
+    )
+    .setMimeType(
+      ContentService.MimeType.JSON
+    );
+
+}
+
+function pruebaResumenGestiones() {
+
+  const resultado =
+    obtenerResumenGestionesAPI({});
+
+  Logger.log(
+    resultado.getContent()
+  );
+
+}
+
+function pruebaListarGestiones() {
+
+  const resultado =
+    listarGestionesAPI({});
+
+  Logger.log(
+    resultado.getContent()
+  );
+
+}
+
+function pruebaObtenerGestion() {
+
+  const e = {
+
+    parameter: {
+
+      id:
+        "GES-2026-999999"
+
+    }
+
+  };
+
+
+  const resultado =
+    obtenerGestionAPI(
+      e
+    );
+
+
+  Logger.log(
+    resultado.getContent()
+  );
+
+}
+
+function pruebaPaginacionGestiones() {
+
+    const e = {
+
+        parameter: {
+
+            page:
+                "2",
+
+            limit:
+                "1"
+
+        }
+
+    };
+
+
+    const resultado =
+        listarGestionesAPI(
+            e
+        );
+
+
+    Logger.log(
+        resultado.getContent()
+    );
+
+}
+
+function pruebaFiltroNivel() {
+
+    const e = {
+
+        parameter: {
+
+            nivel:
+                "Alto"
+
+        }
+
+    };
+
+
+    const resultado =
+        listarGestionesAPI(
+            e
+        );
+
+
+    Logger.log(
+        resultado.getContent()
+    );
+
+}
+
+function pruebaBusquedaGestiones() {
+
+    const e = {
+
+        parameter: {
+
+            buscar:
+                "Catalina"
+
+        }
+
+    };
+
+
+    const resultado =
+        listarGestionesAPI(
+            e
+        );
+
+
+    Logger.log(
+        resultado.getContent()
+    );
+
+}

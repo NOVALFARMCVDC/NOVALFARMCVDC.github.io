@@ -1,0 +1,237 @@
+/******************************************************
+ * ENVÍO AUTOMÁTICO DE CORREO DE CONFIRMACIÓN
+ * Trigger:
+ * Al enviar formulario
+ ******************************************************/
+
+function onFormSubmit(e) {
+
+  try {
+
+    const fila = e.values;
+
+    const hoja = e.range.getSheet();
+    const numeroFila = e.range.getRow();
+
+    // Esperar a que la fórmula genere el ID
+    Utilities.sleep(5000);
+
+    // Leer nuevamente toda la fila del Sheet
+    const datos = hoja
+      .getRange(numeroFila, 1, 1, hoja.getLastColumn())
+      .getValues()[0];
+
+    // La columna M corresponde al índice 12 (A = 0)
+    const id = datos[12];
+
+    // Estos datos sí vienen directamente del formulario
+    const nombre = fila[1];     // Columna B
+    const correo = fila[3];     // Columna D
+    const empresa = fila[10];   // Columna K
+
+    if (!correo) return;
+
+    const asunto = "Confirmación de Registro | Congreso Veterinario CVDC 2026 | NOVALFARM SAS";
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+
+<body style="margin:0;padding:30px;background:#FFFFFF;font-family:Arial,sans-serif;">
+
+<table align="center" width="650" cellpadding="0" cellspacing="0"
+style="background:#FFFFFF;border-radius:12px;overflow:hidden;">
+
+<tr>
+
+<td align="center"
+style="background:#332E92;padding:35px;">
+
+<img
+src="https://novalfarmcvdc.github.io/assets/icons/FaviconNovalfarm.jpg"
+alt="NOVALFARM SAS"
+width="220"
+style="
+display:block;
+width:220px;
+height:auto;
+margin:0 auto;
+border:0;
+outline:none;
+text-decoration:none;
+">
+
+<h2 style="color:#FFFFFF;margin-top:25px;">
+
+¡Gracias por registrarte!
+
+</h2>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding:35px;">
+
+<p style="font-size:18px;">
+
+Hola <strong>${nombre}</strong>,
+
+</p>
+
+<p style="line-height:28px;">
+
+Agradecemos su registro para participar en el
+<strong>Congreso Veterinario CVDC 2026</strong>.
+
+</p>
+
+<p style="line-height:28px;">
+
+Su inscripción fue registrada correctamente en nuestros sistemas.
+
+</p>
+
+<table
+width="100%"
+style="
+background:#F8FAFD;
+border:1px solid #E4E8F1;
+border-radius:10px;
+margin:30px 0;
+">
+
+<tr>
+
+<td style="padding:20px;">
+
+<b>ID Participante:</b><br>
+
+${id}
+
+<br><br>
+
+<b>Empresa:</b><br>
+
+${empresa}
+
+<br><br>
+
+<b>Correo registrado:</b><br>
+
+${correo}
+
+</td>
+
+</tr>
+
+</table>
+
+<p style="line-height:28px;">
+
+Será un gusto recibirlo en nuestro stand durante el evento.
+
+</p>
+
+<div style="text-align:center;margin:40px 0;">
+
+<a
+
+href="https://novalfarm.com.co/pdf/POLITICA-DE-TRATAMIENTO-DE-DATOS-PERSONALES.pdf"
+
+style="
+background:#332E92;
+color:#FFFFFF;
+padding:16px 30px;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;
+display:inline-block;
+">
+
+Consultar Política de Tratamiento de Datos
+
+</a>
+
+</div>
+
+<p style="line-height:28px;">
+
+Gracias por confiar en
+<strong>NOVALFARM SAS</strong>.
+
+</p>
+
+<p style="color:#777777;font-size:13px;margin-top:40px;">
+
+Este es un correo generado automáticamente por NOVALFARM SAS.<br>
+
+Por favor no responda este mensaje.
+
+</p>
+
+<!-- ==========================
+     FOOTER CORPORATIVO
+========================== -->
+
+<div style="margin-top:35px;text-align:center;">
+
+<img
+src="https://novalfarmcvdc.github.io/assets/images/Footer.webp"
+alt="NOVALFARM SAS"
+style="
+display:block;
+width:100%;
+max-width:650px;
+height:auto;
+margin:0 auto;
+border:0;
+outline:none;
+text-decoration:none;
+">
+
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>
+`;
+
+    MailApp.sendEmail({
+
+      to: correo,
+
+      subject: asunto,
+
+      htmlBody: html,
+
+      name: "NOVALFARM SAS",
+
+      replyTo: "contactenos@novalfarm.com.co",
+
+      noReply: true
+
+    });
+
+    Logger.log("Correo enviado correctamente a: " + correo);
+
+  }
+
+  catch (error) {
+
+    Logger.log(error);
+
+  }
+
+}
